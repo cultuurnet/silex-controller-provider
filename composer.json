@@ -1,10 +1,12 @@
 {
-    "name": "vendor/package",
-    "description": "Brief description of this PHP library",
+    "name": "cultuurnet/silex-controller-provider-entryapi",
+    "description": "silex app to run the controller providers for the entryapi",
     "type": "library",
     "license": "Apache-2.0",
     "authors": [],
-    "require": {},
+    "require": {
+		"silex/silex": "~1.3"
+	},
     "require-dev": {
         "phpunit/phpunit": "~4.8",
         "phpunit/php-token-stream": "1.4.6",
