@@ -22,17 +22,21 @@ class EventControllerProvider implements ControllerProviderInterface
         // creates a new controller based on the default route
         $controllers = $app['controllers_factory'];
 
-        $controllers->get('/', function (Application $app) {
-            return $app->redirect('/event');
-        });
+        $controllers->get('event/{id}/', 'controller.event.read:readOne')
+            ->method('GET')
+            ->bind('route.event.read.one');
 
-        $controllers->get('/event', function(Application $app) {
-            return $app->redirect('/event');
-        });
+        $controllers->get('event', 'controller.event.update:doGet')
+            ->method('POST')
+            ->bind('route.event.update.get');
 
-        $controllers->post('/event', function(Application $app) {
-            return $app->redirect();
-        });
+        $controllers->get('event/{id}', 'controller.event.update:doGet')
+            ->method('POST')
+            ->bind('route.event.update.get');
+
+        $controllers->get('event/{id}', 'controller.event.update:doGet')
+            ->method('PUT')
+            ->bind('route.event.update.get');
 
         return $controllers;
     }
