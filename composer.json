@@ -1,6 +1,6 @@
 {
-    "name": "cultuurnet/silex-controller-provider-entryapi",
-    "description": "silex app to run the controller providers for the entryapi",
+    "name": "cultuurnet/udb3-silex-entryapi",
+    "description": "EntryAPI for UDB3 Silex",
     "type": "library",
     "license": "Apache-2.0",
     "authors": [],
