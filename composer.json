@@ -5,8 +5,8 @@
     "license": "Apache-2.0",
     "authors": [],
     "require": {
-		"silex/silex": "~1.3"
-	},
+      "silex/silex": "~1.3"
+    },
     "require-dev": {
         "phpunit/phpunit": "~4.8",
         "phpunit/php-token-stream": "1.4.6",
@@ -16,12 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Vendor\\Package\\": "src/"
+            "CultuurNet\\UDB3SilexEntryAPI\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Vendor\\Package\\": "tests/"
+            "CultuurNet\\UDB3SilexEntryAPI\\": "tests/"
         }
     },
     "minimum-stability": "dev",

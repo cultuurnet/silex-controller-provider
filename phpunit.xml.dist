@@ -1,6 +1,6 @@
 <phpunit
     bootstrap="vendor/autoload.php">
-    <testsuite name="all">
+    <testsuite name="UDB3 Silex EntryAPI">
         <directory>tests</directory>
     </testsuite>
     <logging>
