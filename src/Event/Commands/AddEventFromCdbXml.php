@@ -8,16 +8,31 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
-use CultureFeed_Cdb_Item_Event;
+use CultuurNet\UDB3\XmlString;
 
 /**
  * Provides a command to add an event from CdbXml.
  */
 class AddEventFromCdbXml
 {
+    /**
+     * @var XmlString
+     */
+    protected $xml;
 
-    public function __construct(CultureFeed_Cdb_Item_Event $cdbEvent)
+    /**
+     * @param XmlString $xml
+     */
+    public function __construct(XmlString $xml)
     {
-        $this->cdbEvent = $cdbEvent;
+        $this->xml = $xml;
+    }
+
+    /**
+     * @return XmlString
+     */
+    public function getXml()
+    {
+        return $this->xml;
     }
 }
