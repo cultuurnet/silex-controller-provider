@@ -10,7 +10,7 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
-use CultuurNet\UDB3SilexEntryAPI\InvalidCdbXmlException;
+use CultuurNet\UDB3SilexEntryAPI\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\UnexpectedRootElementException;
 use Psr\Log\LoggerAwareInterface;
@@ -22,6 +22,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
     public function handleAddEventFromCdbXml(AddEventFromCdbXml $addEventFromCdbXml)
     {
+        libxml_use_internal_errors(true);
         $xml = $addEventFromCdbXml->getXml();
         $dom = new \DOMDocument();
         $dom->loadXML($xml);
@@ -38,5 +39,11 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         if ($localName !== $expectedLocalName) {
             throw new UnexpectedRootElementException($localName, $expectedLocalName);
         }
+
+        if (!$dom->schemaValidate(__DIR__ . '/../CdbXmlSchemes/CdbXSD3.3.xsd')) {
+            throw new SchemaValidationException($namespaceURI);
+        }
+
+
     }
 }

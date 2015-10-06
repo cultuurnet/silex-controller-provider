@@ -46,4 +46,28 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
+
+    /**
+     * @test
+     */
+    public function it_validates_against_the_xml_schema()
+    {
+        $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/InvalidSchemaTitleMissing.xml'));
+        $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
+
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\SchemaValidationException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    /**
+     * @test
+     */
+    public function it_accepts_valid_cdbxml()
+    {
+        $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
 }
