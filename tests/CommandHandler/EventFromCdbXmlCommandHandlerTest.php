@@ -7,6 +7,7 @@
  */
 namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
+use CultuurNet\UDB3SilexEntryAPI\SizeLimitedXmlString;
 use PHPUnit_Framework_TestCase;
 
 class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
