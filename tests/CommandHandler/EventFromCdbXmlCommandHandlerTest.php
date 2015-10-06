@@ -97,6 +97,9 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
 
+    /**
+     * @test
+     */
     public function it_validates_empty_xml()
     {
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/Empty.xml'));
