@@ -70,4 +70,40 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
+
+    /**
+     * @test
+     */
+    public function it_validates_too_many_events()
+    {
+        $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/TooManyEvents.xml'));
+        $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
+
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\TooManyItemsException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    /**
+     * @test
+     */
+    public function it_validates_no_event()
+    {
+        $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/NoEventButActor.xml'));
+        $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
+
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    public function it_validates_empty_xml()
+    {
+        $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/Empty.xml'));
+        $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
+
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
 }

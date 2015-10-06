@@ -10,7 +10,9 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\SchemaValidationException;
+use CultuurNet\UDB3SilexEntryAPI\TooManyItemsException;
 use CultuurNet\UDB3SilexEntryAPI\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\UnexpectedRootElementException;
 use Psr\Log\LoggerAwareInterface;
@@ -25,6 +27,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         libxml_use_internal_errors(true);
         $xml = $addEventFromCdbXml->getXml();
         $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
         $dom->loadXML($xml);
         $namespaceURI = $dom->documentElement->namespaceURI;
         $validNamespaces = array('http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL');
@@ -44,6 +47,31 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             throw new SchemaValidationException($namespaceURI);
         }
 
+        $childNodes = $dom->documentElement->childNodes;
+        $element = $childNodes->item(0);
 
+        $expectedElementLocalName = 'event';
+        $expectedElement = $namespaceURI . ":" . $expectedElementLocalName;
+
+        if ($element !== null) {
+            $elementLocalName = $element->localName;
+            $elementNamespaceURI = $element->namespaceURI;
+
+            $elementFound = $elementNamespaceURI . ":" . $elementLocalName;
+
+            if ($elementNamespaceURI !== $namespaceURI) {
+                throw new ElementNotFoundException($expectedElement, $elementFound);
+            }
+
+            if ($elementLocalName !== $expectedElementLocalName) {
+                throw new ElementNotFoundException($expectedElement, $elementFound);
+            }
+        } else {
+            throw new ElementNotFoundException($expectedElement);
+        }
+
+        if ($childNodes->length > 1) {
+            throw new TooManyItemsException();
+        }
     }
 }
