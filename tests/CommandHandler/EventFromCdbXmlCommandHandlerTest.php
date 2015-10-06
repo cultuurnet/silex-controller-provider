@@ -109,4 +109,17 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
+
+    /**
+     * @test
+     */
+    public function it_validates_suspicious_content()
+    {
+        $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/ScriptTag.xml'));
+        $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
+
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\SuspiciousContentException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
 }

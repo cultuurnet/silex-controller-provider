@@ -12,6 +12,7 @@ use Broadway\CommandHandling\CommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\SchemaValidationException;
+use CultuurNet\UDB3SilexEntryAPI\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\TooManyItemsException;
 use CultuurNet\UDB3SilexEntryAPI\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\UnexpectedRootElementException;
@@ -73,5 +74,19 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         if ($childNodes->length > 1) {
             throw new TooManyItemsException();
         }
+
+        $xpath = new \DOMXPath($dom);
+        $xpath->registerNamespace('cdb', $namespaceURI);
+        $longDescriptions = $xpath->query('//cdb:longdescription');
+
+        if ($longDescriptions->length > 0) {
+            /** @var \DOMElement $longDescription */
+            foreach ($longDescriptions as $longDescription) {
+                if (stripos($longDescription->textContent, '<script>') !== false) {
+                    throw new SuspiciousContentException();
+                }
+            }
+        }
+
     }
 }
