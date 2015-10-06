@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2131fea586985d818e59b01ce8160068",
-    "content-hash": "03df7ceff07fbfe1861d953c57224635",
+    "hash": "9c0eec8c2a0d5361b79c75d5cbb83e25",
+    "content-hash": "331c76f1d942226bae853effec998ab2",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -503,16 +503,16 @@
         },
         {
             "name": "cultuurnet/entry",
-            "version": "dev-master",
+            "version": "dev-feature/III-449",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/Entry.git",
-                "reference": "3305505512a489fb78d24a1b6a750a7f6a1ff95c"
+                "reference": "87748c1261b4be51466e1d56155adcc30e603fa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/3305505512a489fb78d24a1b6a750a7f6a1ff95c",
-                "reference": "3305505512a489fb78d24a1b6a750a7f6a1ff95c",
+                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/87748c1261b4be51466e1d56155adcc30e603fa9",
+                "reference": "87748c1261b4be51466e1d56155adcc30e603fa9",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 }
             ],
             "description": "PHP library to access CultuurNet's Entry API",
-            "time": "2015-08-12 21:33:16"
+            "time": "2015-10-06 15:25:02"
         },
         {
             "name": "cultuurnet/search",
@@ -4304,11 +4304,18 @@
             "alias_normalized": "0.1.0.0",
             "version": "dev-feature/III-449",
             "package": "cultuurnet/udb3"
+        },
+        {
+            "alias": "0.1",
+            "alias_normalized": "0.1.0.0",
+            "version": "dev-feature/III-449",
+            "package": "cultuurnet/entry"
         }
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "cultuurnet/udb3": 20
+        "cultuurnet/udb3": 20,
+        "cultuurnet/entry": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
