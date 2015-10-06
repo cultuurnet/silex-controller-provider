@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cdb:cdbxml xmlns:cdb="http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL">
+    <cdb:actor asset="true" availablefrom="2014-11-28T13:53:00" availableto="2100-01-01T00:00:00" createdby="admin ferranti" creationdate="2010-01-11T22:13:39" cdbid="3b98fcf8-81e4-4cb0-a95a-50ee637a2b91" externalid="SKB Import:Organisation_107" lastupdated="2015-01-22T09:58:13" lastupdatedby="ctournicourt" owner="Invoerders Algemeen ">
+        <cdb:actordetails>
+            <cdb:actordetail lang="nl">
+                <cdb:media>
+                    <cdb:file creationdate="11/28/2014 1:52:49 PM" main="true">
+                        <cdb:copyright>CultuurNet Vlaanderen</cdb:copyright>
+                        <cdb:filename>7abdd907-b111-4ab1-ab55-5cd36ce0a517.jpg</cdb:filename>
+                        <cdb:filetype>jpeg</cdb:filetype>
+                        <cdb:hlink>//media.uitdatabank.be/20100111/7abdd907-b111-4ab1-ab55-5cd36ce0a517.jpg</cdb:hlink>
+                    </cdb:file>
+                    <cdb:file>
+                        <cdb:hlink>http://toevla.vlaanderen.be/publiek/nl/register/detail/508</cdb:hlink>
+                        <cdb:mediatype>website</cdb:mediatype>
+                    </cdb:file>
+                </cdb:media>
+                <cdb:shortdescription>AB is de allereerste pop-en rocktempel die de erkenning heeft gekregen als Cultuurinstelling van de Vlaamse Gemeenschap. De concertclub verenigt concertzaal, opnamestudio en ontmoetingsplaats. De ingang in de Anspachlaan geeft uit op een agora, daarboven bevindt zich een tweede zaaltje, de Club. Er is ook een Resto, waar je voor concerten de honger kan stillen.</cdb:shortdescription>
+                <cdb:title>Ancienne Belgique</cdb:title>
+            </cdb:actordetail>
+        </cdb:actordetails>
+        <cdb:categories>
+            <cdb:category catid="8.15.0.0.0" type="actortype">Locatie</cdb:category>
+            <cdb:category catid="8.11.0.0.0" type="actortype">Organisator(en)</cdb:category>
+            <cdb:category catid="3.23.1.0.0" type="facility">Voorzieningen voor rolstoelgebruikers</cdb:category>
+            <cdb:category catid="3.23.2.0.0" type="facility">Assistentie</cdb:category>
+            <cdb:category catid="3.13.3.0.0" type="facility">Brochure beschikbaar in braille</cdb:category>
+            <cdb:category catid="3.17.1.0.0" type="facility">Ringleiding</cdb:category>
+            <cdb:category catid="3.17.2.0.0" type="facility">Voelstoelen</cdb:category>
+            <cdb:category catid="6.4.0.0.0" type="publicscope">Internationaal</cdb:category>
+            <cdb:category catid="reg.1565" type="flandersregion">1000 Brussel</cdb:category>
+            <cdb:category catid="8.6.0.0.0" type="actortype">Cultuur, gemeenschaps of ontmoetingscentrum</cdb:category>
+        </cdb:categories>
+        <cdb:contactinfo>
+            <cdb:address>
+                <cdb:physical>
+                    <cdb:city>Brussel</cdb:city>
+                    <cdb:country>BE</cdb:country>
+                    <cdb:housenr>110</cdb:housenr>
+                    <cdb:street>Anspachlaan</cdb:street>
+                    <cdb:zipcode>1000</cdb:zipcode>
+                </cdb:physical>
+            </cdb:address>
+            <cdb:mail>info@abconcerts.be</cdb:mail>
+            <cdb:phone type="phone">02-548.24.84</cdb:phone>
+            <cdb:phone reservation="true" type="phone">02-548.24.24</cdb:phone>
+            <cdb:url main="true">http://www.abconcerts.be/</cdb:url>
+        </cdb:contactinfo>
+        <cdb:keywords>
+            <cdb:keyword>Cultuurbon </cdb:keyword>
+            <cdb:keyword>Paspartoe</cdb:keyword>
+            <cdb:keyword>TVL Topactor</cdb:keyword>
+        </cdb:keywords>
+    </cdb:actor>
+</cdb:cdbxml>
