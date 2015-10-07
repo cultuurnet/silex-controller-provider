@@ -8,6 +8,8 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
+use Broadway\Repository\RepositoryInterface;
+use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\XMLSyntaxException;
@@ -26,6 +28,7 @@ use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use ValueObjects\String\String;
 
 class EventControllerProvider implements ControllerProviderInterface
 {
@@ -40,16 +43,24 @@ class EventControllerProvider implements ControllerProviderInterface
 
         $controllers->post(
             '/event',
-            function (Request $request, Application $app) {
+            function (
+                Request $request,
+                Application $app,
+                UuidGeneratorInterface $uuidGenerator,
+                RepositoryInterface $repositoryInterface
+            ) {
                 try {
                     if ($request->getContentType() !== 'xml') {
                         return new Response('', Response::HTTP_BAD_REQUEST);
                     }
 
                     $xml = new SizeLimitedXmlString($request->getContent());
-                    $command = new AddEventFromCdbXml($xml);
+                    $id = $uuidGenerator->generate();
+                    $eventId = new String($id);
 
-                    $commandHandler = new EventFromCdbXmlCommandHandler();
+                    $command = new AddEventFromCdbXml($eventId, $xml);
+
+                    $commandHandler = new EventFromCdbXmlCommandHandler($repositoryInterface);
                     $commandHandler->handle($command);
                     $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', null, null);
 

@@ -33,17 +33,10 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
      */
     protected $eventRepository;
 
-    /**
-     * @var UuidGeneratorInterface
-     */
-    protected $uuidGenerator;
-
     public function __construct(
-        RepositoryInterface $eventRepository,
-        UuidGeneratorInterface $uuidGenerator
+        RepositoryInterface $eventRepository
     ) {
         $this->eventRepository = $eventRepository;
-        $this->uuidGenerator = $uuidGenerator;
     }
 
     /**
@@ -114,10 +107,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             }
         }
 
-        $id = $this->uuidGenerator->generate();
-        $eventId = new String($id);
-
-        $event = Event::createFromCdbXml($eventId, $xml);
+        $event = Event::createFromCdbXml($addEventFromCdbXml->getEventId(), $xml);
 
         $this->eventRepository->save($event);
     }
