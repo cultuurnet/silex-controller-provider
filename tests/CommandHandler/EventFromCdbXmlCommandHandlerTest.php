@@ -7,7 +7,10 @@
  */
 namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
-use CultuurNet\UDB3SilexEntryAPI\Exceptions\SizeLimitedXmlString;
+use Broadway\Repository\RepositoryInterface;
+use Broadway\UuidGenerator\Testing\MockUuidGenerator;
+use Broadway\UuidGenerator\UuidGeneratorInterface;
+use CultuurNet\UDB3\Event\EventRepository;
 use PHPUnit_Framework_TestCase;
 
 class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
@@ -17,9 +20,27 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
      */
     protected $eventFromCdbXmlCommandHandler;
 
+    /**
+     * @var UuidGeneratorInterface
+     */
+    protected $uuidGenerator;
+
     public function setUp()
     {
-        $this->eventFromCdbXmlCommandHandler = new EventFromCdbXmlCommandHandler();
+        $this->uuidGenerator = $this->getMock(
+            UuidGeneratorInterface::class
+        );
+        $this->uuidGenerator->method('generate')
+                            ->willReturn('test123');
+
+
+        /** @var RepositoryInterface $repository */
+        $eventRepository = $this->getMock(RepositoryInterface::class);
+
+        $this->eventFromCdbXmlCommandHandler = new EventFromCdbXmlCommandHandler(
+            $eventRepository,
+            $this->uuidGenerator
+        );
     }
 
     /**
