@@ -9,6 +9,10 @@
 namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
+use Broadway\Repository\RepositoryInterface;
+use Broadway\UuidGenerator\UuidGeneratorInterface;
+use CultuurNet\UDB3\Event\DefaultEventEditingService;
+use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
@@ -18,11 +22,33 @@ use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use ValueObjects\String\String;
 
 class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
+    /**
+     * @var RepositoryInterface
+     */
+    protected $eventRepository;
+
+    /**
+     * @var UuidGeneratorInterface
+     */
+    protected $uuidGenerator;
+
+    public function __construct(
+        RepositoryInterface $eventRepository,
+        UuidGeneratorInterface $uuidGenerator
+    ) {
+        $this->eventRepository = $eventRepository;
+        $this->uuidGenerator = $uuidGenerator;
+    }
+
+    /**
+     * @param AddEventFromCdbXml $addEventFromCdbXml
+     */
     public function handleAddEventFromCdbXml(AddEventFromCdbXml $addEventFromCdbXml)
     {
         libxml_use_internal_errors(true);
@@ -88,5 +114,11 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             }
         }
 
+        $id = $this->uuidGenerator->generate();
+        $eventId = new String($id);
+
+        $event = Event::createFromCdbXml($eventId, $xml);
+
+        $this->eventRepository->save($event);
     }
 }
