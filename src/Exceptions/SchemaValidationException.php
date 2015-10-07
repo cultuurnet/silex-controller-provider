@@ -6,7 +6,7 @@
  * Time: 12:03
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class SchemaValidationException extends InvalidCdbXmlException
 {

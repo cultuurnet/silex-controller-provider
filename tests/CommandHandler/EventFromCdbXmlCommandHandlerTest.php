@@ -7,7 +7,7 @@
  */
 namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
-use CultuurNet\UDB3SilexEntryAPI\SizeLimitedXmlString;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SizeLimitedXmlString;
 use PHPUnit_Framework_TestCase;
 
 class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
@@ -30,7 +30,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/InvalidNamespace.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\UnexpectedNamespaceException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
@@ -43,7 +43,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/InvalidRootElement.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\UnexpectedRootElementException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
@@ -56,7 +56,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/InvalidSchemaTitleMissing.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\SchemaValidationException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
@@ -80,7 +80,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/TooManyEvents.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\TooManyItemsException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
@@ -93,7 +93,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/NoEventButActor.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
@@ -106,7 +106,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/Empty.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
@@ -119,7 +119,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $xml = new \CultuurNet\UDB3\XmlString(file_get_contents(__DIR__ . '/ScriptTag.xml'));
         $addEventFromCdbXml = new \CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml($xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\SuspiciousContentException::class);
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }

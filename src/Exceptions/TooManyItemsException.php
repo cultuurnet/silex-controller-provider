@@ -6,7 +6,7 @@
  * Time: 13:25
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class TooManyItemsException extends InvalidCdbXmlException
 {

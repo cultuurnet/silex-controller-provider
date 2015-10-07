@@ -6,7 +6,7 @@
  * Time: 13:17
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class ElementNotFoundException extends InvalidCdbXmlException
 {

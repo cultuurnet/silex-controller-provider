@@ -8,6 +8,8 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SizeLimitedXmlString;
+
 class SizeLimitedXmlStringTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -15,7 +17,7 @@ class SizeLimitedXmlStringTest extends \PHPUnit_Framework_TestCase
      */
     public function it_validates_the_file_size()
     {
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\TooLargeException::class);
+        $this->setExpectedException(Exceptions\TooLargeException::class);
         $xml = new SizeLimitedXmlString(file_get_contents(__DIR__.'/TooLarge.xml'));
     }
 }

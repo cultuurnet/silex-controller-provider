@@ -6,7 +6,7 @@
  * Time: 11:44
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class UnexpectedNamespaceException extends InvalidCdbXmlException
 {

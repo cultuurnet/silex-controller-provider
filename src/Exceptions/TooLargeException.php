@@ -6,7 +6,7 @@
  * Time: 14:49
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class TooLargeException extends InvalidCdbXmlException
 {

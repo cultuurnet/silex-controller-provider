@@ -6,7 +6,7 @@
  * Time: 11:47
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class UnexpectedRootElementException extends InvalidCdbXmlException
 {

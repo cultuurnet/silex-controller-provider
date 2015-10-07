@@ -10,12 +10,12 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
-use CultuurNet\UDB3SilexEntryAPI\ElementNotFoundException;
-use CultuurNet\UDB3SilexEntryAPI\SchemaValidationException;
-use CultuurNet\UDB3SilexEntryAPI\SuspiciousContentException;
-use CultuurNet\UDB3SilexEntryAPI\TooManyItemsException;
-use CultuurNet\UDB3SilexEntryAPI\UnexpectedNamespaceException;
-use CultuurNet\UDB3SilexEntryAPI\UnexpectedRootElementException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 

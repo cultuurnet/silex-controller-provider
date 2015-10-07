@@ -6,7 +6,7 @@
  * Time: 14:43
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 use CultuurNet\UDB3\XmlString;
 

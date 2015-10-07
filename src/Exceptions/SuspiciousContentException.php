@@ -6,7 +6,7 @@
  * Time: 14:05
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class SuspiciousContentException extends InvalidCdbXmlException
 {

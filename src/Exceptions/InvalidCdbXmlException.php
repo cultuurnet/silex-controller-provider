@@ -6,7 +6,7 @@
  * Time: 11:01
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI;
+namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class InvalidCdbXmlException extends \InvalidArgumentException
 {
