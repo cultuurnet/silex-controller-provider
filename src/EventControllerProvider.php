@@ -43,15 +43,13 @@ class EventControllerProvider implements ControllerProviderInterface
 
         $controllers->post(
             '/event',
-            function (
-                Request $request,
-                Application $app,
-                UuidGeneratorInterface $uuidGenerator,
-                RepositoryInterface $repositoryInterface
-            ) {
+            function (Request $request, Application $app) {
                 try {
+                    $repository = $app['event_repository'];
+                    $uuidGenerator = new \Broadway\UuidGenerator\Rfc4122\Version4Generator();
                     if ($request->getContentType() !== 'xml') {
-                        return new Response('', Response::HTTP_BAD_REQUEST);
+                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
+                        return $this->createResponse($rsp);
                     }
 
                     $xml = new SizeLimitedXmlString($request->getContent());
@@ -60,9 +58,10 @@ class EventControllerProvider implements ControllerProviderInterface
 
                     $command = new AddEventFromCdbXml($eventId, $xml);
 
-                    $commandHandler = new EventFromCdbXmlCommandHandler($repositoryInterface);
+                    $commandHandler = new EventFromCdbXmlCommandHandler($repository);
                     $commandHandler->handle($command);
-                    $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', null, null);
+                    $link = $app['entryapi.link_base_url'] . $eventId;
+                    $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
 
                 } catch (TooLargeException $e) {
                     $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
