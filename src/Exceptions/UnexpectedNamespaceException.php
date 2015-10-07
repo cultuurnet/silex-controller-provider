@@ -13,7 +13,7 @@ class UnexpectedNamespaceException extends InvalidCdbXmlException
     public function __construct($namespace, $validNamespaces)
     {
         parent::__construct(
-            'Unexpected namespace ' . $namespace . ', expected one of: ' . implode(', ', $validNamespaces)
+            'Unexpected namespace "' . $namespace . '", expected one of: ' . implode(', ', $validNamespaces)
         );
     }
 }
