@@ -21,6 +21,7 @@ use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
+use DOMDocument;
 use DOMElement;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -110,8 +111,13 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         }
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
-        $eventXml = $dom->saveXml($element);
+
+        // $element is some node of some other document
+        $temp_document = new DOMDocument('1.0', 'utf-8');
+        $temp_document->appendChild($temp_document->importNode($element, true));
+        $eventXml = $temp_document->saveXML();
         $cdbXml = new XmlString($eventXml);
+
         $event = Event::createFromCdbXml(
             $addEventFromCdbXml->getEventId(),
             $cdbXml,
@@ -119,10 +125,5 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         );
 
         $this->eventRepository->save($event);
-    }
-
-    public function xmlStringfromElement(DOMElement $element)
-    {
-        $this->xmlString = $element->ownerDocument->saveXML($element);
     }
 }
