@@ -13,6 +13,7 @@ use Broadway\Repository\RepositoryInterface;
 use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\UDB3\Event\DefaultEventEditingService;
 use CultuurNet\UDB3\Event\Event;
+use CultuurNet\UDB3\XmlString;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
@@ -20,6 +21,7 @@ use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
+use DOMElement;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use ValueObjects\String\String;
@@ -108,12 +110,19 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         }
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
+        $eventXml = $dom->saveXml($element);
+        $cdbXml = new XmlString($eventXml);
         $event = Event::createFromCdbXml(
             $addEventFromCdbXml->getEventId(),
-            $xml,
+            $cdbXml,
             $cdbXmlNamespaceUri
         );
 
         $this->eventRepository->save($event);
+    }
+
+    public function xmlStringfromElement(DOMElement $element)
+    {
+        $this->xmlString = $element->ownerDocument->saveXML($element);
     }
 }
