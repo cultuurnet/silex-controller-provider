@@ -107,7 +107,12 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             }
         }
 
-        $event = Event::createFromCdbXml($addEventFromCdbXml->getEventId(), $xml);
+        $cdbXmlNamespaceUri = new String($namespaceURI);
+        $event = Event::createFromCdbXml(
+            $addEventFromCdbXml->getEventId(),
+            $xml,
+            $cdbXmlNamespaceUri
+        );
 
         $this->eventRepository->save($event);
     }
