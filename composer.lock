@@ -507,12 +507,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/Entry.git",
-                "reference": "87748c1261b4be51466e1d56155adcc30e603fa9"
+                "reference": "f3d9c051e938df571414aebe4afaacb84c229370"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/87748c1261b4be51466e1d56155adcc30e603fa9",
-                "reference": "87748c1261b4be51466e1d56155adcc30e603fa9",
+                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/f3d9c051e938df571414aebe4afaacb84c229370",
+                "reference": "f3d9c051e938df571414aebe4afaacb84c229370",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 }
             ],
             "description": "PHP library to access CultuurNet's Entry API",
-            "time": "2015-10-06 15:25:02"
+            "time": "2015-10-08 14:42:46"
         },
         {
             "name": "cultuurnet/search",
@@ -600,12 +600,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-php.git",
-                "reference": "21b712816e758e952444b09724bb02b9e52f2f3a"
+                "reference": "62397720febc24761244b5c516c5743701870283"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/21b712816e758e952444b09724bb02b9e52f2f3a",
-                "reference": "21b712816e758e952444b09724bb02b9e52f2f3a",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/62397720febc24761244b5c516c5743701870283",
+                "reference": "62397720febc24761244b5c516c5743701870283",
                 "shasum": ""
             },
             "require": {
@@ -672,7 +672,7 @@
                 }
             ],
             "description": "UDB3 PHP libraries",
-            "time": "2015-10-08 08:15:41"
+            "time": "2015-10-09 12:52:19"
         },
         {
             "name": "danielstjules/stringy",
@@ -3889,16 +3889,16 @@
         },
         {
             "name": "sebastian/global-state",
-            "version": "1.0.0",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/global-state.git",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01"
+                "reference": "23af31f402993cfd94e99cbc4b782e9a78eb0e97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
-                "reference": "c7428acdb62ece0a45e6306f1ae85e1c05b09c01",
+                "url": "https://api.github.com/repos/sebastianbergmann/global-state/zipball/23af31f402993cfd94e99cbc4b782e9a78eb0e97",
+                "reference": "23af31f402993cfd94e99cbc4b782e9a78eb0e97",
                 "shasum": ""
             },
             "require": {
@@ -3936,7 +3936,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2014-10-06 09:23:50"
+            "time": "2015-06-21 15:11:22"
         },
         {
             "name": "sebastian/recursion-context",

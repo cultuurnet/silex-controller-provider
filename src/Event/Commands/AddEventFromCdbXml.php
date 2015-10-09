@@ -8,7 +8,7 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
-use CultuurNet\UDB3\XmlString;
+use CultuurNet\UDB3SilexEntryAPI\EventXmlString;
 use ValueObjects\String\String;
 
 /**
@@ -17,7 +17,7 @@ use ValueObjects\String\String;
 class AddEventFromCdbXml
 {
     /**
-     * @var XmlString
+     * @var EventXmlString
      */
     protected $xml;
 
@@ -28,16 +28,16 @@ class AddEventFromCdbXml
 
     /**
      * @param String $eventId
-     * @param XmlString $xml
+     * @param EventXmlString $xml
      */
-    public function __construct(String $eventId, XmlString $xml)
+    public function __construct(String $eventId, EventXmlString $xml)
     {
         $this->eventId = $eventId;
         $this->xml = $xml;
     }
 
     /**
-     * @return XmlString
+     * @return EventXmlString
      */
     public function getXml()
     {
