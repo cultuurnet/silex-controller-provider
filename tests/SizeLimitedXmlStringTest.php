@@ -8,7 +8,7 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
-use CultuurNet\UDB3SilexEntryAPI\Exceptions\SizeLimitedXmlString;
+use CultuurNet\UDB3SilexEntryAPI\SizeLimitedXmlString;
 
 class SizeLimitedXmlStringTest extends \PHPUnit_Framework_TestCase
 {

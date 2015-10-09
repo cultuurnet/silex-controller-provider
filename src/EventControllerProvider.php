@@ -17,7 +17,7 @@ use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EventFromCdbXmlCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
-use CultuurNet\UDB3SilexEntryAPI\Exceptions\SizeLimitedXmlString;
+use CultuurNet\UDB3SilexEntryAPI\SizeLimitedXmlString;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooLargeException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
@@ -52,7 +52,7 @@ class EventControllerProvider implements ControllerProviderInterface
                         return $this->createResponse($rsp);
                     }
 
-                    $xml = new SizeLimitedXmlString($request->getContent());
+                    $xml = new EventXmlString($request->getContent());
                     $id = $uuidGenerator->generate();
                     $eventId = new String($id);
 

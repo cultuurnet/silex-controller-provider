@@ -10,8 +10,6 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
 use Broadway\Repository\RepositoryInterface;
-use Broadway\UuidGenerator\UuidGeneratorInterface;
-use CultuurNet\UDB3\Event\DefaultEventEditingService;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3\XmlString;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
@@ -112,15 +110,9 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
-        // $element is some node of some other document
-        $temp_document = new DOMDocument('1.0', 'utf-8');
-        $temp_document->appendChild($temp_document->importNode($element, true));
-        $eventXml = $temp_document->saveXML();
-        $cdbXml = new XmlString($eventXml);
-
         $event = Event::createFromCdbXml(
             $addEventFromCdbXml->getEventId(),
-            $cdbXml,
+            $xml,
             $cdbXmlNamespaceUri
         );
 
