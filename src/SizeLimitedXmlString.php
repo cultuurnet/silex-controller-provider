@@ -6,9 +6,10 @@
  * Time: 14:43
  */
 
-namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
+namespace CultuurNet\UDB3SilexEntryAPI;
 
 use CultuurNet\UDB3\XmlString;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooLargeException;
 
 class SizeLimitedXmlString extends XmlString
 {
