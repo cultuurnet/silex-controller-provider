@@ -8,7 +8,8 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
-use CultuurNet\UDB3SilexEntryAPI\EventXmlString;
+use CultuurNet\UDB3\EventXmlString;
+use CultuurNet\UDB3SilexEntryAPI\SizeLimitedEventXmlString;
 use ValueObjects\String\String;
 
 /**
@@ -28,9 +29,9 @@ class AddEventFromCdbXml
 
     /**
      * @param String $eventId
-     * @param EventXmlString $xml
+     * @param SizeLimitedEventXmlString $xml
      */
-    public function __construct(String $eventId, EventXmlString $xml)
+    public function __construct(String $eventId, SizeLimitedEventXmlString $xml)
     {
         $this->eventId = $eventId;
         $this->xml = $xml;

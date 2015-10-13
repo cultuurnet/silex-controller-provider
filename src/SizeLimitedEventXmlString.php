@@ -8,10 +8,10 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
-use CultuurNet\UDB3\XmlString;
+use CultuurNet\UDB3\EventXmlString;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooLargeException;
 
-class SizeLimitedXmlString extends XmlString
+class SizeLimitedEventXmlString extends EventXmlString
 {
     public function __construct($value)
     {

@@ -52,7 +52,7 @@ class EventControllerProvider implements ControllerProviderInterface
                         return $this->createResponse($rsp);
                     }
 
-                    $xml = new EventXmlString($request->getContent());
+                    $xml = new SizeLimitedEventXmlString($request->getContent());
                     $id = $uuidGenerator->generate();
                     $eventId = new String($id);
 

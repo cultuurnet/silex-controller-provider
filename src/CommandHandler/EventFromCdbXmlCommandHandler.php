@@ -11,7 +11,6 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 use Broadway\CommandHandling\CommandHandler;
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\UDB3\Event\Event;
-use CultuurNet\UDB3\XmlString;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
