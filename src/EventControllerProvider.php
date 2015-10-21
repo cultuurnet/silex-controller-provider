@@ -45,7 +45,7 @@ class EventControllerProvider implements ControllerProviderInterface
         $controllers->post(
             '/event',
             function (Request $request, Application $app) {
-                $callback = function() use ($request, $app) {
+                $callback = function () use ($request, $app) {
                     $repository = $app['event_repository'];
                     $uuidGenerator = new \Broadway\UuidGenerator\Rfc4122\Version4Generator();
                     if ($request->getContentType() !== 'xml') {
@@ -73,7 +73,7 @@ class EventControllerProvider implements ControllerProviderInterface
         $controllers->put(
             '/event/{cdbid}',
             function (Request $request, Application $app, $cdbid) {
-                $callback = function() use ($request, $app, $cdbid) {
+                $callback = function () use ($request, $app, $cdbid) {
                     $repository = $app['event_repository'];
                     if ($request->getContentType() !== 'xml') {
                         $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
