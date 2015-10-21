@@ -15,6 +15,7 @@ use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EventFromCdbXmlCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\SizeLimitedXmlString;
@@ -44,7 +45,7 @@ class EventControllerProvider implements ControllerProviderInterface
         $controllers->post(
             '/event',
             function (Request $request, Application $app) {
-                try {
+                $callback = function() use ($request, $app) {
                     $repository = $app['event_repository'];
                     $uuidGenerator = new \Broadway\UuidGenerator\Rfc4122\Version4Generator();
                     if ($request->getContentType() !== 'xml') {
@@ -53,6 +54,7 @@ class EventControllerProvider implements ControllerProviderInterface
                     }
 
                     $xml = new SizeLimitedEventXmlString($request->getContent());
+
                     $id = $uuidGenerator->generate();
                     $eventId = new String($id);
 
@@ -62,32 +64,66 @@ class EventControllerProvider implements ControllerProviderInterface
                     $commandHandler->handle($command);
                     $link = $app['entryapi.link_base_url'] . $eventId;
                     $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
+                };
 
-                } catch (TooLargeException $e) {
-                    $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
-                } catch (XMLSyntaxException $e) {
-                    $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
-                } catch (ElementNotFoundException $e) {
-                    $rsp = rsp::error('ElementNotFoundError', $e->getMessage());
-                } catch (UnexpectedNamespaceException $e) {
-                    $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
-                } catch (UnexpectedRootElementException $e) {
-                    $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
-                } catch (SchemaValidationException $e) {
-                    $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
-                } catch (TooManyItemsException $e) {
-                    $rsp = rsp::error('TooManyItems', $e->getMessage());
-                } catch (SuspiciousContentException $e) {
-                    $rsp = rsp::error('SuspectedContent', $e->getMessage());
-                } catch (\Exception $e) {
-                    $rsp = rsp::error('UnexpectedFailure', $e->getMessage());
-                } finally {
-                    return $this->createResponse($rsp);
-                }
+                $this->processEventRequest($callback);
+            }
+        );
+
+        $controllers->put(
+            '/event/{cdbid}',
+            function (Request $request, Application $app, $cdbid) {
+                $callback = function() use ($request, $app, $cdbid) {
+                    $repository = $app['event_repository'];
+                    if ($request->getContentType() !== 'xml') {
+                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
+                        return $this->createResponse($rsp);
+                    }
+
+                    $xml = new SizeLimitedEventXmlString($request->getContent());
+                    $eventId = new String($cdbid);
+
+                    $command = new UpdateEventFromCdbXml($eventId, $xml);
+
+                    $commandHandler = new EventFromCdbXmlCommandHandler($repository);
+                    $commandHandler->handle($command);
+                    $link = $app['entryapi.link_base_url'] . $eventId;
+                    $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
+                };
+
+                $this->processEventRequest($callback);
             }
         );
 
         return $controllers;
+    }
+
+    private function processEventRequest($callback)
+    {
+        try {
+            $callback();
+
+        } catch (TooLargeException $e) {
+            $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
+        } catch (XMLSyntaxException $e) {
+            $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
+        } catch (ElementNotFoundException $e) {
+            $rsp = rsp::error('ElementNotFoundError', $e->getMessage());
+        } catch (UnexpectedNamespaceException $e) {
+            $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
+        } catch (UnexpectedRootElementException $e) {
+            $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
+        } catch (SchemaValidationException $e) {
+            $rsp = rsp::error('XmlSyntaxError', $e->getMessage());
+        } catch (TooManyItemsException $e) {
+            $rsp = rsp::error('TooManyItems', $e->getMessage());
+        } catch (SuspiciousContentException $e) {
+            $rsp = rsp::error('SuspectedContent', $e->getMessage());
+        } catch (\Exception $e) {
+            $rsp = rsp::error('UnexpectedFailure', $e->getMessage());
+        } finally {
+            return $this->createResponse($rsp);
+        }
     }
 
     /**
