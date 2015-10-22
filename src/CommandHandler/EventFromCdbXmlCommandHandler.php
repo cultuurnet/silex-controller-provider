@@ -189,7 +189,9 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
-        $event = Event::updateFromCdbXml(
+        $event = $this->eventRepository->load($updateEventFromCdbXml->getEventId()->toNative());
+
+        $event->updateFromCdbXml(
             $updateEventFromCdbXml->getEventId(),
             $xml,
             $cdbXmlNamespaceUri
