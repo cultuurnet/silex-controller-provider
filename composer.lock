@@ -603,12 +603,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-php.git",
-                "reference": "710e8476e4b65d2c7f8d8f0ceca6e0479b0fb693"
+                "reference": "6e5ac0aaf8da32e378998b308b85959a79ef707c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/710e8476e4b65d2c7f8d8f0ceca6e0479b0fb693",
-                "reference": "710e8476e4b65d2c7f8d8f0ceca6e0479b0fb693",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/6e5ac0aaf8da32e378998b308b85959a79ef707c",
+                "reference": "6e5ac0aaf8da32e378998b308b85959a79ef707c",
                 "shasum": ""
             },
             "require": {
@@ -674,7 +674,7 @@
                 }
             ],
             "description": "UDB3 PHP libraries",
-            "time": "2015-10-20 17:57:28"
+            "time": "2015-10-22 12:53:34"
         },
         {
             "name": "danielstjules/stringy",
@@ -3836,16 +3836,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "4.8.14",
+            "version": "4.8.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b4900675926860bef091644849305399b986efa2"
+                "reference": "be8f7b9eacf8243940f8412f8b4a9a434c73dd7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b4900675926860bef091644849305399b986efa2",
-                "reference": "b4900675926860bef091644849305399b986efa2",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/be8f7b9eacf8243940f8412f8b4a9a434c73dd7b",
+                "reference": "be8f7b9eacf8243940f8412f8b4a9a434c73dd7b",
                 "shasum": ""
             },
             "require": {
@@ -3904,7 +3904,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-17 15:03:30"
+            "time": "2015-10-22 09:05:37"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
