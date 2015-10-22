@@ -19,7 +19,8 @@ class PermissionControllerProvider implements ControllerProviderInterface
      * @param Application $app
      * @return Response
      */
-    public function connect(Application $app) {
+    public function connect(Application $app)
+    {
         /** @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];
 
