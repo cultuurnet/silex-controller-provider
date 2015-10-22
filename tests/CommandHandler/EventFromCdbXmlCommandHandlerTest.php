@@ -9,6 +9,7 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\Repository\RepositoryInterface;
 use Broadway\UuidGenerator\UuidGeneratorInterface;
+use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
@@ -40,11 +41,24 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         /** @var RepositoryInterface $repository */
         $eventRepository = $this->getMock(RepositoryInterface::class);
 
+        $this->id = new String('test123');
+        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $namespaceUri = new String('http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL');
+
+        $event = Event::createFromCdbXml(
+            $this->id,
+            $xml,
+            $namespaceUri
+        );
+
+        $eventRepository->expects($this->any())
+            ->method('load')
+            ->with($this->id)
+            ->willReturn($event);
+
         $this->eventFromCdbXmlCommandHandler = new EventFromCdbXmlCommandHandler(
             $eventRepository
         );
-
-        $this->id = new String('test123');
     }
 
     /**
