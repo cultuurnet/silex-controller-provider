@@ -88,10 +88,10 @@ class EventControllerProvider implements ControllerProviderInterface
                     $commandHandler = new EventFromCdbXmlCommandHandler($repository);
                     $commandHandler->handle($command);
                     $link = $app['entryapi.link_base_url'] . $eventId;
-                    $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
+                    $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
                 };
 
-                $this->processEventRequest($callback);
+                return $this->processEventRequest($callback);
             }
         );
 
