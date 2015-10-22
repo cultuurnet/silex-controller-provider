@@ -22,6 +22,11 @@ use ValueObjects\String\String;
 class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
+     * @var RepositoryInterface
+     */
+    protected $eventRepository;
+
+    /**
      * @var EventFromCdbXmlCommandHandler
      */
     protected $eventFromCdbXmlCommandHandler;
@@ -38,8 +43,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        /** @var RepositoryInterface $repository */
-        $eventRepository = $this->getMock(RepositoryInterface::class);
+        $this->eventRepository = $this->getMock(RepositoryInterface::class);
 
         $this->id = new String('test123');
         $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
@@ -51,13 +55,13 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
             $namespaceUri
         );
 
-        $eventRepository->expects($this->any())
+        $this->eventRepository->expects($this->any())
             ->method('load')
             ->with($this->id)
             ->willReturn($event);
 
         $this->eventFromCdbXmlCommandHandler = new EventFromCdbXmlCommandHandler(
-            $eventRepository
+            $this->eventRepository
         );
     }
 
@@ -209,6 +213,40 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    /**
+     * @test
+     */
+    public function it_updates_an_event_when_posting_xml_with_a_cdbid()
+    {
+        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/ValidWithCdbid.xml'));
+        $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
+
+        $this->eventRepository->expects($this->once())
+            ->method('load');
+
+        $this->eventRepository->expects($this->once())
+            ->method('save');
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    /**
+     * @test
+     */
+    public function it_creates_an_event_when_posting_xml_without_a_cdbid()
+    {
+        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
+
+        $this->eventRepository->expects($this->never())
+            ->method('load');
+
+        $this->eventRepository->expects($this->once())
+            ->method('save');
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }

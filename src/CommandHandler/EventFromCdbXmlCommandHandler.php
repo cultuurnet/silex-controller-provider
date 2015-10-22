@@ -95,6 +95,8 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             throw new TooManyItemsException();
         }
 
+        $cdbid = $element->getAttribute('cdbid');
+
         $xpath = new \DOMXPath($dom);
         $xpath->registerNamespace('cdb', $namespaceURI);
         $longDescriptions = $xpath->query('//cdb:longdescription');
@@ -110,11 +112,24 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
-        $event = Event::createFromCdbXml(
-            $addEventFromCdbXml->getEventId(),
-            $xml,
-            $cdbXmlNamespaceUri
-        );
+        $event = null;
+        if (!empty($cdbid)) {
+            $event = $this->eventRepository->load($addEventFromCdbXml->getEventId()->toNative());
+        }
+
+        if (!empty($event)) {
+            $event->updateFromCdbXml(
+                $addEventFromCdbXml->getEventId(),
+                $xml,
+                $cdbXmlNamespaceUri
+            );
+        } else {
+            $event = Event::createFromCdbXml(
+                $addEventFromCdbXml->getEventId(),
+                $xml,
+                $cdbXmlNamespaceUri
+            );
+        }
 
         $this->eventRepository->save($event);
     }
