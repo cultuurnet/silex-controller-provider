@@ -64,9 +64,10 @@ class EventControllerProvider implements ControllerProviderInterface
                     $commandHandler->handle($command);
                     $link = $app['entryapi.link_base_url'] . $eventId;
                     $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
+                    return $rsp;
                 };
 
-                $this->processEventRequest($callback);
+                return $this->processEventRequest($callback);
             }
         );
 
@@ -89,6 +90,7 @@ class EventControllerProvider implements ControllerProviderInterface
                     $commandHandler->handle($command);
                     $link = $app['entryapi.link_base_url'] . $eventId;
                     $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
+                    return $rsp;
                 };
 
                 return $this->processEventRequest($callback);
@@ -101,7 +103,7 @@ class EventControllerProvider implements ControllerProviderInterface
     private function processEventRequest($callback)
     {
         try {
-            $callback();
+            $rsp = $callback();
 
         } catch (TooLargeException $e) {
             $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
