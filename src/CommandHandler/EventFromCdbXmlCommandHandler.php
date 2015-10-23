@@ -119,7 +119,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         if (!empty($event)) {
             $event->updateFromCdbXml(
-                $addEventFromCdbXml->getEventId(),
+                $cdbid,
                 $xml,
                 $cdbXmlNamespaceUri
             );
