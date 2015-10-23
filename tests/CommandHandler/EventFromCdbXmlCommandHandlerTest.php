@@ -46,7 +46,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $this->eventRepository = $this->getMock(RepositoryInterface::class);
 
         $this->id = new String('test123');
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/ValidWithCdbid.xml'));
         $namespaceUri = new String('http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL');
 
         $event = Event::createFromCdbXml(
@@ -55,9 +55,11 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
             $namespaceUri
         );
 
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+
         $this->eventRepository->expects($this->any())
             ->method('load')
-            ->with($this->id)
+            ->with($cdbid)
             ->willReturn($event);
 
         $this->eventFromCdbXmlCommandHandler = new EventFromCdbXmlCommandHandler(
@@ -160,6 +162,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
     public function it_accepts_valid_cdbxml_for_update()
     {
         $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $this->id = new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
         $updateEventFromCdbXml = new UpdateEventFromCdbXml($this->id, $xml);
 
         $this->eventFromCdbXmlCommandHandler->handle($updateEventFromCdbXml);
