@@ -114,7 +114,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $event = null;
         if (!empty($cdbid)) {
-            $event = $this->eventRepository->load($addEventFromCdbXml->getEventId()->toNative());
+            $event = $this->eventRepository->load($cdbid);
         }
 
         if (!empty($event)) {
