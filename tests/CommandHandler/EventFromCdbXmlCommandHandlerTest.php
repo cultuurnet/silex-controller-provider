@@ -226,7 +226,8 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
         $this->eventRepository->expects($this->once())
-            ->method('load');
+            ->method('load')
+            ->with('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
 
         $this->eventRepository->expects($this->once())
             ->method('save');
