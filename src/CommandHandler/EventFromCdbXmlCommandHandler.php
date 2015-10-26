@@ -43,6 +43,12 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
     /**
      * @param AddEventFromCdbXml $addEventFromCdbXml
+     * @throws UnexpectedNamespaceException
+     * @throws UnexpectedRootElementException
+     * @throws SchemaValidationException
+     * @throws ElementNotFoundException
+     * @throws SuspiciousContentException
+     * @throws EventUpdatedException
      */
     public function handleAddEventFromCdbXml(AddEventFromCdbXml $addEventFromCdbXml)
     {
@@ -70,6 +76,8 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         }
 
         $childNodes = $dom->documentElement->childNodes;
+
+        /** @var DOMElement $element */
         $element = $childNodes->item(0);
 
         $expectedElementLocalName = 'event';
@@ -113,6 +121,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
+        /** @var Event $event */
         $event = null;
         if (!empty($cdbid)) {
             $event = $this->eventRepository->load($cdbid);
@@ -211,6 +220,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
+        /** @var Event $event */
         $event = $this->eventRepository->load($updateEventFromCdbXml->getEventId()->toNative());
 
         $event->updateFromCdbXml(
