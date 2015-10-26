@@ -106,18 +106,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
         $cdbid = $element->getAttribute('cdbid');
 
-        $xpath = new \DOMXPath($dom);
-        $xpath->registerNamespace('cdb', $namespaceURI);
-        $longDescriptions = $xpath->query('//cdb:longdescription');
-
-        if ($longDescriptions->length > 0) {
-            /** @var \DOMElement $longDescription */
-            foreach ($longDescriptions as $longDescription) {
-                if (stripos($longDescription->textContent, '<script>') !== false) {
-                    throw new SuspiciousContentException();
-                }
-            }
-        }
+        $this->guardDescriptions($dom, $namespaceURI);
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
@@ -205,18 +194,7 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             throw new TooManyItemsException();
         }
 
-        $xpath = new \DOMXPath($dom);
-        $xpath->registerNamespace('cdb', $namespaceURI);
-        $longDescriptions = $xpath->query('//cdb:longdescription');
-
-        if ($longDescriptions->length > 0) {
-            /** @var \DOMElement $longDescription */
-            foreach ($longDescriptions as $longDescription) {
-                if (stripos($longDescription->textContent, '<script>') !== false) {
-                    throw new SuspiciousContentException();
-                }
-            }
-        }
+        $this->guardDescriptions($dom, $namespaceURI);
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
@@ -230,5 +208,26 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         );
 
         $this->eventRepository->save($event);
+    }
+
+    /**
+     * @param DOMDocument $dom
+     * @param string $namespaceURI
+     * @throws SuspiciousContentException
+     */
+    private function guardDescriptions(DOMDocument $dom, $namespaceURI)
+    {
+        $xpath = new \DOMXPath($dom);
+        $xpath->registerNamespace('cdb', $namespaceURI);
+        $longDescriptions = $xpath->query('//cdb:longdescription');
+
+        if ($longDescriptions->length > 0) {
+            /** @var \DOMElement $longDescription */
+            foreach ($longDescriptions as $longDescription) {
+                if (stripos($longDescription->textContent, '<script>') !== false) {
+                    throw new SuspiciousContentException();
+                }
+            }
+        }
     }
 }
