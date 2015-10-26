@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce80d5b0e44a7d16b5a5d5959a06c747",
-    "content-hash": "4f2cf05ec4c86cd33ce37f2cf6fadfba",
+    "hash": "ffd3a7082a823723798f0102b1f0afff",
+    "content-hash": "ef035283954bd4c49b7861efe18f415c",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -503,16 +503,16 @@
         },
         {
             "name": "cultuurnet/entry",
-            "version": "dev-master",
+            "version": "dev-feature/III-447",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/Entry.git",
-                "reference": "abc247dfd3b07cf6380199eb20b9af811e3b3d42"
+                "reference": "06f6503179111ac32915b8841f4b043b10b97108"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/abc247dfd3b07cf6380199eb20b9af811e3b3d42",
-                "reference": "abc247dfd3b07cf6380199eb20b9af811e3b3d42",
+                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/06f6503179111ac32915b8841f4b043b10b97108",
+                "reference": "06f6503179111ac32915b8841f4b043b10b97108",
                 "shasum": ""
             },
             "require": {
@@ -549,7 +549,7 @@
                 }
             ],
             "description": "PHP library to access CultuurNet's Entry API",
-            "time": "2015-10-23 05:51:27"
+            "time": "2015-10-26 11:17:23"
         },
         {
             "name": "cultuurnet/search",
@@ -599,16 +599,16 @@
         },
         {
             "name": "cultuurnet/udb3",
-            "version": "dev-master",
+            "version": "dev-feature/III-447",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-php.git",
-                "reference": "87c08cf47e87447b047d8f735ce9b96761631064"
+                "reference": "d4b5b40daea76249a868a6aa801d253131c09c82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/87c08cf47e87447b047d8f735ce9b96761631064",
-                "reference": "87c08cf47e87447b047d8f735ce9b96761631064",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/d4b5b40daea76249a868a6aa801d253131c09c82",
+                "reference": "d4b5b40daea76249a868a6aa801d253131c09c82",
                 "shasum": ""
             },
             "require": {
@@ -674,7 +674,7 @@
                 }
             ],
             "description": "UDB3 PHP libraries",
-            "time": "2015-10-23 07:26:00"
+            "time": "2015-10-26 15:41:14"
         },
         {
             "name": "danielstjules/stringy",
@@ -4301,9 +4301,25 @@
             "time": "2015-09-14 14:14:09"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "0.1",
+            "alias_normalized": "0.1.0.0",
+            "version": "dev-feature/III-447",
+            "package": "cultuurnet/udb3"
+        },
+        {
+            "alias": "0.1",
+            "alias_normalized": "0.1.0.0",
+            "version": "dev-feature/III-447",
+            "package": "cultuurnet/entry"
+        }
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "cultuurnet/udb3": 20,
+        "cultuurnet/entry": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],

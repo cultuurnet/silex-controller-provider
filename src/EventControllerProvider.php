@@ -10,6 +10,8 @@ namespace CultuurNet\UDB3SilexEntryAPI;
 
 use Broadway\Repository\RepositoryInterface;
 use Broadway\UuidGenerator\UuidGeneratorInterface;
+use CultuurNet\Entry\EventPermission;
+use CultuurNet\Entry\EventPermissionCollection;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\EventNotFoundException;
@@ -45,6 +47,30 @@ class EventControllerProvider implements ControllerProviderInterface
         $controllers->get(
             '/CheckPermission',
             function (Request $request, Application $app) {
+                $email  = $request->query->get('email');
+                if (!empty($request->query->get('cdbids'))) {
+                    $cdbids = explode(",", $request->query->get('cdbids'));
+                }
+                $uitid  = $request->query->get('user');
+
+                $repository = $app['event_repository'];
+                $editableEvents = $repository->getEventsEditability($uitid, $email);
+
+                $eventPermissions= array();
+                if (isset($cdbids)) {
+                    foreach ($cdbids as $cdbid) {
+                        $isEditable = in_array($cdbid, $editableEvents);
+                        $eventPermission = new EventPermission($cdbid, $isEditable);
+                        $eventPermissions[] = $eventPermission;
+                    }
+                } else {
+                    foreach ($editableEvents as $cdbid) {
+                        $eventPermission = new EventPermission($cdbid, true);
+                        $eventPermissions[] = $eventPermission;
+                    }
+                }
+
+                return $this->createPermissionResponse($eventPermissions);
             }
         );
 
@@ -156,6 +182,14 @@ class EventControllerProvider implements ControllerProviderInterface
         }
 
         return new Response($xml, $status, $headers);
+    }
+
+    private function createPermissionResponse(EventPermissionCollection $eventPermissions)
+    {
+        $headers = array('Content-Type'=>'application/xml');
+        $xml = $eventPermissions->toXml();
+
+        return new Response($xml, Response::HTTP_OK, $headers);
     }
 
     /**
