@@ -35,10 +35,18 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
      */
     protected $eventRepository;
 
+    /**
+     * @var string[]
+     */
+    protected $validNamespaces;
+
     public function __construct(
         RepositoryInterface $eventRepository
     ) {
         $this->eventRepository = $eventRepository;
+        $this->validNamespaces = [
+            'http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL' => __DIR__ . '/../CdbXmlSchemes/CdbXSD3.3.xsd',
+        ];
     }
 
     /**
@@ -54,64 +62,18 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
     {
         libxml_use_internal_errors(true);
         $xml = $addEventFromCdbXml->getXml();
-        $dom = new \DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->loadXML($xml);
+        $dom = $this->loadDOM($xml);
+
         $namespaceURI = $dom->documentElement->namespaceURI;
-        $validNamespaces = array('http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL');
+        $element = $this->getEventElement($dom);
 
-        if (!in_array($namespaceURI, $validNamespaces)) {
-            throw new UnexpectedNamespaceException($namespaceURI, $validNamespaces);
-        }
-
-        $localName = $dom->documentElement->localName;
-        $expectedLocalName = 'cdbxml';
-
-        if ($localName !== $expectedLocalName) {
-            throw new UnexpectedRootElementException($localName, $expectedLocalName);
-        }
-
-        if (!$dom->schemaValidate(__DIR__ . '/../CdbXmlSchemes/CdbXSD3.3.xsd')) {
-            throw new SchemaValidationException($namespaceURI);
-        }
-
-        $childNodes = $dom->documentElement->childNodes;
-
-        /** @var DOMElement $element */
-        $element = $childNodes->item(0);
-
-        $expectedElementLocalName = 'event';
-        $expectedElement = $namespaceURI . ":" . $expectedElementLocalName;
-
-        if ($element !== null) {
-            $elementLocalName = $element->localName;
-            $elementNamespaceURI = $element->namespaceURI;
-
-            $elementFound = $elementNamespaceURI . ":" . $elementLocalName;
-
-            if ($elementNamespaceURI !== $namespaceURI) {
-                throw new ElementNotFoundException($expectedElement, $elementFound);
-            }
-
-            if ($elementLocalName !== $expectedElementLocalName) {
-                throw new ElementNotFoundException($expectedElement, $elementFound);
-            }
-        } else {
-            throw new ElementNotFoundException($expectedElement);
-        }
-
-        if ($childNodes->length > 1) {
-            throw new TooManyItemsException();
-        }
-
-        $cdbid = $element->getAttribute('cdbid');
-
-        $this->guardDescriptions($dom, $namespaceURI);
+        $this->guardDescriptions($dom);
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
         /** @var Event $event */
         $event = null;
+        $cdbid = $element->getAttribute('cdbid');
         if (!empty($cdbid)) {
             $event = $this->eventRepository->load($cdbid);
         }
@@ -135,8 +97,6 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
 
             $this->eventRepository->save($event);
         }
-
-
     }
 
     /**
@@ -146,27 +106,56 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
     {
         libxml_use_internal_errors(true);
         $xml = $updateEventFromCdbXml->getXml();
-        $dom = new \DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->loadXML($xml);
+        $dom = $this->loadDOM($xml);
+
+        $this->getEventElement($dom);
+
+        $this->guardDescriptions($dom);
+
+        /** @var Event $event */
+        $event = $this->eventRepository->load(
+            $updateEventFromCdbXml->getEventId()->toNative()
+        );
+
+        $cdbXmlNamespaceUri = new String($dom->documentElement->namespaceURI);
+        $event->updateFromCdbXml(
+            $updateEventFromCdbXml->getEventId(),
+            $xml,
+            $cdbXmlNamespaceUri
+        );
+
+        $this->eventRepository->save($event);
+    }
+
+    /**
+     * @param DOMDocument $dom
+     * @throws SuspiciousContentException
+     */
+    private function guardDescriptions(DOMDocument $dom)
+    {
+        $xpath = new \DOMXPath($dom);
+        $xpath->registerNamespace('cdb', $dom->documentElement->namespaceURI);
+        $longDescriptions = $xpath->query('//cdb:longdescription');
+
+        if ($longDescriptions->length > 0) {
+            /** @var \DOMElement $longDescription */
+            foreach ($longDescriptions as $longDescription) {
+                if (stripos($longDescription->textContent, '<script>') !== false) {
+                    throw new SuspiciousContentException();
+                }
+            }
+        }
+    }
+
+    /**
+     * @param DOMDocument $dom
+     * @return \DOMElement
+     * @throws ElementNotFoundException
+     * @throws TooManyItemsException
+     */
+    private function getEventElement(DOMDocument $dom)
+    {
         $namespaceURI = $dom->documentElement->namespaceURI;
-        $validNamespaces = array('http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL');
-
-        if (!in_array($namespaceURI, $validNamespaces)) {
-            throw new UnexpectedNamespaceException($namespaceURI, $validNamespaces);
-        }
-
-        $localName = $dom->documentElement->localName;
-        $expectedLocalName = 'cdbxml';
-
-        if ($localName !== $expectedLocalName) {
-            throw new UnexpectedRootElementException($localName, $expectedLocalName);
-        }
-
-        if (!$dom->schemaValidate(__DIR__ . '/../CdbXmlSchemes/CdbXSD3.3.xsd')) {
-            throw new SchemaValidationException($namespaceURI);
-        }
-
         $childNodes = $dom->documentElement->childNodes;
         $element = $childNodes->item(0);
 
@@ -194,40 +183,46 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
             throw new TooManyItemsException();
         }
 
-        $this->guardDescriptions($dom, $namespaceURI);
-
-        $cdbXmlNamespaceUri = new String($namespaceURI);
-
-        /** @var Event $event */
-        $event = $this->eventRepository->load($updateEventFromCdbXml->getEventId()->toNative());
-
-        $event->updateFromCdbXml(
-            $updateEventFromCdbXml->getEventId(),
-            $xml,
-            $cdbXmlNamespaceUri
-        );
-
-        $this->eventRepository->save($event);
+        return $element;
     }
 
     /**
-     * @param DOMDocument $dom
-     * @param string $namespaceURI
-     * @throws SuspiciousContentException
+     * @param string $xml
+     * @return DOMDocument
+     * @throws SchemaValidationException
+     * @throws UnexpectedNamespaceException
+     * @throws UnexpectedRootElementException
      */
-    private function guardDescriptions(DOMDocument $dom, $namespaceURI)
+    private function loadDOM($xml)
     {
-        $xpath = new \DOMXPath($dom);
-        $xpath->registerNamespace('cdb', $namespaceURI);
-        $longDescriptions = $xpath->query('//cdb:longdescription');
+        $dom = new \DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->loadXML($xml);
 
-        if ($longDescriptions->length > 0) {
-            /** @var \DOMElement $longDescription */
-            foreach ($longDescriptions as $longDescription) {
-                if (stripos($longDescription->textContent, '<script>') !== false) {
-                    throw new SuspiciousContentException();
-                }
-            }
+        $namespaceURI = $dom->documentElement->namespaceURI;
+
+        if (!array_key_exists($namespaceURI, $this->validNamespaces)) {
+            throw new UnexpectedNamespaceException(
+                $namespaceURI,
+                $this->validNamespaces
+            );
         }
+        $schema = $this->validNamespaces[$namespaceURI];
+
+        $localName = $dom->documentElement->localName;
+        $expectedLocalName = 'cdbxml';
+
+        if ($localName !== $expectedLocalName) {
+            throw new UnexpectedRootElementException(
+                $localName,
+                $expectedLocalName
+            );
+        }
+
+        if (!$dom->schemaValidate($schema)) {
+            throw new SchemaValidationException($namespaceURI);
+        }
+
+        return $dom;
     }
 }
