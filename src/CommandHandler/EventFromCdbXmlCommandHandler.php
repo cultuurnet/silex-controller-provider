@@ -40,9 +40,8 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
      */
     protected $validNamespaces;
 
-    public function __construct(
-        RepositoryInterface $eventRepository
-    ) {
+    public function __construct(RepositoryInterface $eventRepository)
+    {
         $this->eventRepository = $eventRepository;
         $this->validNamespaces = [
             'http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL' => __DIR__ . '/../CdbXmlSchemes/CdbXSD3.3.xsd',
@@ -58,8 +57,9 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
      * @throws SuspiciousContentException
      * @throws EventUpdatedException
      */
-    public function handleAddEventFromCdbXml(AddEventFromCdbXml $addEventFromCdbXml)
-    {
+    public function handleAddEventFromCdbXml(
+        AddEventFromCdbXml $addEventFromCdbXml
+    ) {
         libxml_use_internal_errors(true);
         $xml = $addEventFromCdbXml->getXml();
         $dom = $this->loadDOM($xml);
@@ -102,8 +102,9 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
     /**
      * @param UpdateEventFromCdbXml $updateEventFromCdbXml
      */
-    public function handleUpdateEventFromCdbXml(UpdateEventFromCdbXml $updateEventFromCdbXml)
-    {
+    public function handleUpdateEventFromCdbXml(
+        UpdateEventFromCdbXml $updateEventFromCdbXml
+    ) {
         libxml_use_internal_errors(true);
         $xml = $updateEventFromCdbXml->getXml();
         $dom = $this->loadDOM($xml);
@@ -140,11 +141,20 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
         if ($longDescriptions->length > 0) {
             /** @var \DOMElement $longDescription */
             foreach ($longDescriptions as $longDescription) {
-                if (stripos($longDescription->textContent, '<script>') !== false) {
+                if ($this->containsScriptTag($longDescription)) {
                     throw new SuspiciousContentException();
                 }
             }
         }
+    }
+
+    /**
+     * @param DOMElement $element
+     * @return bool
+     */
+    private function containsScriptTag(DOMElement $element)
+    {
+        return stripos($element->textContent, '<script>') !== false;
     }
 
     /**
