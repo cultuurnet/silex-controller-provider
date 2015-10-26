@@ -42,6 +42,12 @@ class EventControllerProvider implements ControllerProviderInterface
         /** @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];
 
+        $controllers->get(
+            '/CheckPermission',
+            function (Request $request, Application $app) {
+            }
+        );
+
         $controllers->post(
             '/event',
             function (Request $request, Application $app) {
