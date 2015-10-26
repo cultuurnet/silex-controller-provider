@@ -12,6 +12,7 @@ use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
@@ -235,7 +236,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $this->eventRepository->expects($this->once())
             ->method('save');
 
-        $this->setExpectedException('CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException');
+        $this->setExpectedException(EventUpdatedException::class);
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
