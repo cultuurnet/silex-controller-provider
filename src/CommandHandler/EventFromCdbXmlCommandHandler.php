@@ -14,6 +14,7 @@ use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
@@ -123,15 +124,21 @@ class EventFromCdbXmlCommandHandler extends CommandHandler implements LoggerAwar
                 $xml,
                 $cdbXmlNamespaceUri
             );
+
+            $this->eventRepository->save($event);
+
+            throw new EventUpdatedException($cdbid);
         } else {
             $event = Event::createFromCdbXml(
                 $addEventFromCdbXml->getEventId(),
                 $xml,
                 $cdbXmlNamespaceUri
             );
+
+            $this->eventRepository->save($event);
         }
 
-        $this->eventRepository->save($event);
+
     }
 
     /**

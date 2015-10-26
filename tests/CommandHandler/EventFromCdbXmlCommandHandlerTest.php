@@ -235,6 +235,8 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
         $this->eventRepository->expects($this->once())
             ->method('save');
 
+        $this->setExpectedException('CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException');
+
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
     }
 
