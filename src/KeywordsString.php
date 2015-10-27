@@ -79,8 +79,13 @@ class KeywordsString extends String
     public function checkForKey($value, $key)
     {
         $value = $value . '=';
+        $foundKey = null;
         if (strpos($value, $key) === false) {
-            throw new KeyNotFoundException($key);
+            strpos($value, '=');
+            if (strpos($value, '=') !== false) {
+                $foundKey = substr($value, 0, strpos($value, '='));
+            }
+            throw new KeyNotFoundException($key, $foundKey);
         }
     }
 
