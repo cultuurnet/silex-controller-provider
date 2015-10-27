@@ -10,6 +10,10 @@ namespace CultuurNet\UDB3SilexEntryAPI\Exceptions;
 
 class UnexpectedNamespaceException extends InvalidCdbXmlException
 {
+    /**
+     * @param string $namespace
+     * @param string[] $validNamespaces
+     */
     public function __construct($namespace, $validNamespaces)
     {
         parent::__construct(
