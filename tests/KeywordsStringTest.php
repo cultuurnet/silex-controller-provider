@@ -55,6 +55,17 @@ class KeywordsStringTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_validates_for_an_unexpected_key()
+    {
+        $this->setExpectedException(Exceptions\Keywords\KeyNotFoundException::class, 'Expected visibles, found user');
+        $keywordsString = new KeywordsString(
+            file_get_contents(__DIR__.'/samples/KeywordsStringWithAnUnexpectedKey.txt')
+        );
+    }
+
+    /**
+     * @test
+     */
     public function it_validates_when_using_too_much_visibles_values()
     {
         $this->setExpectedException(Exceptions\Keywords\UnequalAmountOfValuesException::class);
