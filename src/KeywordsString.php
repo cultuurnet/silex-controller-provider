@@ -53,7 +53,7 @@ class KeywordsString extends String
 
         if ((strpos($value, $keysDelimiter) === false)) {
             throw new CharacterNotFoundException($keysDelimiter);
-        } elseif (substr_count($value, '&') > 1) {
+        } elseif (substr_count($value, $keysDelimiter) > 1) {
             throw new TooManySpecificCharactersException($keysDelimiter);
         }
 
