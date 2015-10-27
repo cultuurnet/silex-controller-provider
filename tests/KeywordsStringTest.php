@@ -73,4 +73,20 @@ class KeywordsStringTest extends \PHPUnit_Framework_TestCase
             file_get_contents(__DIR__.'/samples/KeywordsStringWithTooMuchKeywordsValues.txt')
         );
     }
+
+    /**
+     * @test
+     */
+    public function it_validates_for_a_one_element_values_array()
+    {
+        $keywordsString = new KeywordsString(
+            file_get_contents(__DIR__.'/samples/KeywordsStringWithOneKeywordAndOneVisible.txt')
+        );
+
+        $expectedKeywords = array('keyword1');
+        $expectedVisibles = array('true');
+
+        $this->assertEquals($expectedKeywords, $keywordsString->getKeywords());
+        $this->assertEquals($expectedVisibles, $keywordsString->getVisibles());
+    }
 }
