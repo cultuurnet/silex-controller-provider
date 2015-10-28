@@ -13,9 +13,11 @@ use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\KeywordsString;
 use CultuurNet\UDB3\XMLSyntaxException;
-use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EventFromCdbXmlCommandHandler;
+use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -61,7 +63,7 @@ class EventControllerProvider implements ControllerProviderInterface
 
                     $command = new AddEventFromCdbXml($eventId, $xml);
 
-                    $commandHandler = new EventFromCdbXmlCommandHandler($repository);
+                    $commandHandler = new EntryAPIEventCommandHandler($repository);
 
                     try {
                         $commandHandler->handle($command);
@@ -72,6 +74,33 @@ class EventControllerProvider implements ControllerProviderInterface
                         $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
                     }
 
+                    return $rsp;
+                };
+
+                return $this->processEventRequest($callback);
+            }
+        );
+
+        $controllers->post(
+            '/event/{cdbid}/keywords',
+            function (Request $request, Application $app, $cdbid) {
+                $callback = function () use ($request, $app, $cdbid) {
+                    $repository = $app['event_repository'];
+
+                    if ($request->getContentType() !== 'x-www-form-urlencoded') {
+                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
+                        return $this->createResponse($rsp);
+                    }
+
+                    $keywordsString = new KeywordsString($request->getContent());
+                    $eventId = new String($cdbid);
+
+                    $command = new ApplyLabels($eventId, $keywordsString);
+
+                    $commandHandler = new EntryAPIEventCommandHandler($repository);
+                    $commandHandler->handle($command);
+                    $link = $app['entryapi.link_base_url'] . $cdbid;
+                    $rsp = new Rsp('0.1', 'INFO', 'KeywordsCreated', $link, null);
                     return $rsp;
                 };
 
@@ -94,7 +123,7 @@ class EventControllerProvider implements ControllerProviderInterface
 
                     $command = new UpdateEventFromCdbXml($eventId, $xml);
 
-                    $commandHandler = new EventFromCdbXmlCommandHandler($repository);
+                    $commandHandler = new EntryAPIEventCommandHandler($repository);
                     $commandHandler->handle($command);
                     $link = $app['entryapi.link_base_url'] . $eventId;
                     $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);

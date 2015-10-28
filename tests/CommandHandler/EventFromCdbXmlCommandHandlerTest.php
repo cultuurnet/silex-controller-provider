@@ -28,7 +28,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
     protected $eventRepository;
 
     /**
-     * @var EventFromCdbXmlCommandHandler
+     * @var EntryAPIEventCommandHandler
      */
     protected $eventFromCdbXmlCommandHandler;
 
@@ -63,7 +63,7 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
             ->with($cdbid)
             ->willReturn($event);
 
-        $this->eventFromCdbXmlCommandHandler = new EventFromCdbXmlCommandHandler(
+        $this->eventFromCdbXmlCommandHandler = new EntryAPIEventCommandHandler(
             $this->eventRepository
         );
     }
@@ -186,6 +186,19 @@ class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
      * @test
      */
     public function it_validates_no_event()
+    {
+        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/NoEventAtAll.xml'));
+        $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
+
+        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException::class);
+
+        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    /**
+     * @test
+     */
+    public function it_validates_when_there_is_no_element_at_all()
     {
         $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/NoEventButActor.xml'));
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
