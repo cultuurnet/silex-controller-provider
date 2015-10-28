@@ -20,7 +20,7 @@ use CultuurNet\UDB3SilexEntryAPI\SizeLimitedEventXmlString;
 use PHPUnit_Framework_TestCase;
 use ValueObjects\String\String;
 
-class EventFromCdbXmlCommandHandlerTest extends PHPUnit_Framework_TestCase
+class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
