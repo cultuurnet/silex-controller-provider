@@ -9,8 +9,11 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\Repository\RepositoryInterface;
 use Broadway\UuidGenerator\UuidGeneratorInterface;
+use CultuurNet\Entry\Keyword;
 use CultuurNet\UDB3\Event\Event;
+use CultuurNet\UDB3\KeywordsString;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
@@ -269,5 +272,26 @@ class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
             ->method('save');
 
         $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
+    }
+
+    /**
+     * @test
+     */
+    public function it_applies_labels()
+    {
+        $keywordsString = file_get_contents(__DIR__ . '/KeywordsStringWithTwoKeywords.txt');
+        $applyLabels = new ApplyLabels(
+            new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
+            new KeywordsString($keywordsString)
+        );
+
+        $this->eventRepository->expects($this->once())
+            ->method('load')
+            ->with('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+
+        $this->eventRepository->expects($this->once())
+            ->method('save');
+
+        $this->eventFromCdbXmlCommandHandler->handle($applyLabels);
     }
 }
