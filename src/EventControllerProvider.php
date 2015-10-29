@@ -20,6 +20,7 @@ use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EventFromCdbXmlCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooLargeException;
@@ -93,9 +94,16 @@ class EventControllerProvider implements ControllerProviderInterface
                     $command = new AddEventFromCdbXml($eventId, $xml);
 
                     $commandHandler = new EventFromCdbXmlCommandHandler($repository);
-                    $commandHandler->handle($command);
-                    $link = $app['entryapi.link_base_url'] . $eventId;
-                    $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
+
+                    try {
+                        $commandHandler->handle($command);
+                        $link = $app['entryapi.link_base_url'] . $eventId;
+                        $rsp = new Rsp('0.1', 'INFO', 'ItemCreated', $link, null);
+                    } catch (EventUpdatedException $e) {
+                        $link = $app['entryapi.link_base_url'] . $e->getMessage();
+                        $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
+                    }
+
                     return $rsp;
                 };
 
