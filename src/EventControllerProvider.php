@@ -14,6 +14,7 @@ use CultuurNet\Entry\EventPermission;
 use CultuurNet\Entry\EventPermissionCollection;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
+use CultuurNet\UDB3\Event\ReadModel\Permission\PermissionQueryInterface;
 use CultuurNet\UDB3\EventNotFoundException;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EventFromCdbXmlCommandHandler;
@@ -46,32 +47,52 @@ class EventControllerProvider implements ControllerProviderInterface
         $controllers = $app['controllers_factory'];
 
         $controllers->get(
-            '/CheckPermission',
+            'event/checkpermission',
             function (Request $request, Application $app) {
-                $email  = $request->query->get('email');
-                if (!empty($request->query->get('cdbids'))) {
-                    $cdbids = explode(",", $request->query->get('cdbids'));
+                /** @var String[] $eventIds */
+                $eventIds = [];
+                if (!empty($request->query->get('ids'))) {
+                    $eventIds = explode(",", $request->query->get('ids'));
+                    $eventIds = array_filter(
+                        $eventIds,
+                        function ($item) {
+                            return trim($item) !== '';
+                        }
+                    );
+                    $eventIds = array_map(
+                        function ($cdbid) {
+                            return new String($cdbid);
+                        },
+                        $eventIds
+                    );
                 }
-                $uitid  = $request->query->get('user');
 
-                $repository = $app['event_repository'];
-                $editableEvents = $repository->getEventsEditability($uitid, $email);
+                $uitId  = $request->query->get('user');
 
-                $eventPermissions= array();
-                if (isset($cdbids)) {
-                    foreach ($cdbids as $cdbid) {
+                /** @var PermissionQueryInterface $repository */
+                $repository = $app['event_permission.repository'];
+                $editableEvents = $repository->getEditableEvents(
+                    new String($uitId)
+                );
+
+                if (empty($eventIds)) {
+                    $eventIds = $editableEvents;
+                }
+
+                /** @var EventPermission[] $eventPermissions */
+                $eventPermissions = array_map(
+                    function (String $cdbid) use ($editableEvents) {
                         $isEditable = in_array($cdbid, $editableEvents);
-                        $eventPermission = new EventPermission($cdbid, $isEditable);
-                        $eventPermissions[] = $eventPermission;
-                    }
-                } else {
-                    foreach ($editableEvents as $cdbid) {
-                        $eventPermission = new EventPermission($cdbid, true);
-                        $eventPermissions[] = $eventPermission;
-                    }
-                }
+                        return new EventPermission($cdbid, $isEditable);
+                    },
+                    $eventIds
+                );
 
-                return $this->createPermissionResponse($eventPermissions);
+                return $this->createPermissionResponse(
+                    new EventPermissionCollection(
+                        $eventPermissions
+                    )
+                );
             }
         );
 
