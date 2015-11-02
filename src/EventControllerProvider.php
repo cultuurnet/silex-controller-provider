@@ -83,7 +83,7 @@ class EventControllerProvider implements ControllerProviderInterface
                 $eventPermissions = array_map(
                     function (String $cdbid) use ($editableEvents) {
                         $isEditable = in_array($cdbid, $editableEvents);
-                        return new EventPermission($cdbid, $isEditable);
+                        return new EventPermission($cdbid->toNative(), $isEditable);
                     },
                     $eventIds
                 );
