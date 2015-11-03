@@ -126,6 +126,13 @@ class EventControllerProvider implements ControllerProviderInterface
                     $id = $eventElement->getAttribute('cdbid');
 
                     if ($id) {
+                        // First try to retrieve the event from the JSON-LD read model.
+                        // This will result in a EventNotFoundException if the event
+                        // does not exist.
+                        /** @var \CultuurNet\UDB3\EventServiceInterface $service */
+                        $service = $app['event_service'];
+                        $service->getEvent($id);
+
                         $command = new UpdateEventFromCdbXml(
                             new String($id),
                             $xml
