@@ -87,9 +87,9 @@ class EventControllerProvider implements ControllerProviderInterface
                 $callback = function () use ($request, $app, $cdbid) {
                     $repository = $app['event_repository'];
 
-                    if ($request->getContentType() !== 'x-www-form-urlencoded') {
+                    if ($request->getContentType() !== 'form') {
                         $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
-                        return $this->createResponse($rsp);
+                        return $rsp;
                     }
 
                     $keywordsString = new KeywordsString($request->getContent());
