@@ -11,6 +11,8 @@ use Broadway\Repository\RepositoryInterface;
 use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\Keyword;
 use CultuurNet\UDB3\Event\Event;
+use CultuurNet\UDB3\Label;
+use CultuurNet\UDB3\LabelCollection;
 use CultuurNet\UDB3SilexEntryAPI\KeywordsVisiblesPair;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
@@ -277,12 +279,16 @@ class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_applies_labels()
+    public function it_merges_labels()
     {
-        $keywordsString = file_get_contents(__DIR__ . '/KeywordsStringWithTwoKeywords.txt');
-        $applyLabels = new MergeLabels(
+        $mergeLabels = new MergeLabels(
             new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
-            new KeywordsVisiblesPair($keywordsString)
+            new LabelCollection(
+                [
+                    new Label('keyword1', false),
+                    new Label('keyword2', true),
+                ]
+            )
         );
 
         $this->eventRepository->expects($this->once())
@@ -292,6 +298,6 @@ class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
         $this->eventRepository->expects($this->once())
             ->method('save');
 
-        $this->eventFromCdbXmlCommandHandler->handle($applyLabels);
+        $this->eventFromCdbXmlCommandHandler->handle($mergeLabels);
     }
 }

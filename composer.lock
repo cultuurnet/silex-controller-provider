@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4564388f6a86d4de3fb466dd2b6bdb8b",
-    "content-hash": "03f07e60ed1e4e0a7ed8a4ad3b4a7d07",
+    "hash": "a4676dbbc708fdbd50f24d4f90dbf4e6",
+    "content-hash": "68f282adb28012f52dfd9f730e85ff36",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -503,16 +503,16 @@
         },
         {
             "name": "cultuurnet/entry",
-            "version": "dev-master",
+            "version": "dev-feature/III-481",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/Entry.git",
-                "reference": "abc247dfd3b07cf6380199eb20b9af811e3b3d42"
+                "reference": "e9b280e4f9b9de8e1bd5026288eaa4ac9f9b9def"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/abc247dfd3b07cf6380199eb20b9af811e3b3d42",
-                "reference": "abc247dfd3b07cf6380199eb20b9af811e3b3d42",
+                "url": "https://api.github.com/repos/cultuurnet/Entry/zipball/e9b280e4f9b9de8e1bd5026288eaa4ac9f9b9def",
+                "reference": "e9b280e4f9b9de8e1bd5026288eaa4ac9f9b9def",
                 "shasum": ""
             },
             "require": {
@@ -549,7 +549,7 @@
                 }
             ],
             "description": "PHP library to access CultuurNet's Entry API",
-            "time": "2015-10-23 05:51:27"
+            "time": "2015-11-10 16:21:14"
         },
         {
             "name": "cultuurnet/search",
@@ -603,12 +603,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-php.git",
-                "reference": "9207774215aebb31ef77f4da11bde9a1b40d5d85"
+                "reference": "108379e5109d19d5509406caace71cb909ec2973"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/9207774215aebb31ef77f4da11bde9a1b40d5d85",
-                "reference": "9207774215aebb31ef77f4da11bde9a1b40d5d85",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/108379e5109d19d5509406caace71cb909ec2973",
+                "reference": "108379e5109d19d5509406caace71cb909ec2973",
                 "shasum": ""
             },
             "require": {
@@ -620,7 +620,7 @@
                 "cultuurnet/clock": "~0.1",
                 "cultuurnet/culturefeed-php": "~1.5",
                 "cultuurnet/deserializer": "~0.1",
-                "cultuurnet/entry": "~0.1",
+                "cultuurnet/entry": "dev-feature/III-481 as 0.1",
                 "cultuurnet/search": "~1.1",
                 "danielstjules/stringy": "~1.9",
                 "doctrine/dbal": "~2.4",
@@ -674,7 +674,7 @@
                 }
             ],
             "description": "UDB3 PHP libraries",
-            "time": "2015-10-28 14:07:53"
+            "time": "2015-11-10 17:00:20"
         },
         {
             "name": "danielstjules/stringy",
@@ -802,16 +802,16 @@
         },
         {
             "name": "doctrine/cache",
-            "version": "v1.5.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/cache.git",
-                "reference": "eb8a73619af4f1c8711e2ce482f5de3643258a1f"
+                "reference": "2b9cec5a5e722010cbebc91713d4c11eaa064d5e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/cache/zipball/eb8a73619af4f1c8711e2ce482f5de3643258a1f",
-                "reference": "eb8a73619af4f1c8711e2ce482f5de3643258a1f",
+                "url": "https://api.github.com/repos/doctrine/cache/zipball/2b9cec5a5e722010cbebc91713d4c11eaa064d5e",
+                "reference": "2b9cec5a5e722010cbebc91713d4c11eaa064d5e",
                 "shasum": ""
             },
             "require": {
@@ -868,7 +868,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2015-10-28 11:27:45"
+            "time": "2015-11-02 18:35:48"
         },
         {
             "name": "doctrine/collections",
@@ -1082,16 +1082,16 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "0bcb2e79d8571787f18b7eb036ed3d004908e604"
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/0bcb2e79d8571787f18b7eb036ed3d004908e604",
-                "reference": "0bcb2e79d8571787f18b7eb036ed3d004908e604",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1103,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
@@ -1145,7 +1145,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2014-12-20 21:24:13"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "doctrine/lexer",
@@ -2649,16 +2649,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.22.3",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ebfc36b7e77b0c1175afe30459cf943010245540"
+                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ebfc36b7e77b0c1175afe30459cf943010245540",
-                "reference": "ebfc36b7e77b0c1175afe30459cf943010245540",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
+                "reference": "d9b6333ae8dd2c8e3fd256e127548def0bc614c6",
                 "shasum": ""
             },
             "require": {
@@ -2671,7 +2671,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.22-dev"
+                    "dev-master": "1.23-dev"
                 }
             },
             "autoload": {
@@ -2706,7 +2706,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-10-13 07:07:02"
+            "time": "2015-11-05 12:49:06"
         },
         {
             "name": "willdurand/geocoder",
@@ -4289,11 +4289,18 @@
             "alias_normalized": "0.1.0.0",
             "version": "dev-feature/III-481",
             "package": "cultuurnet/udb3"
+        },
+        {
+            "alias": "0.1",
+            "alias_normalized": "0.1.0.0",
+            "version": "dev-feature/III-481",
+            "package": "cultuurnet/entry"
         }
     ],
     "minimum-stability": "dev",
     "stability-flags": {
-        "cultuurnet/udb3": 20
+        "cultuurnet/udb3": 20,
+        "cultuurnet/entry": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
