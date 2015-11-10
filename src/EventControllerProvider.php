@@ -19,7 +19,6 @@ use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
-use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -49,7 +48,7 @@ class EventControllerProvider implements ControllerProviderInterface
 
         $app['event_controller'] = $app->share(
             function (Application $app) {
-                $controller = new EventController($app['event_repository']);
+                $controller = new EventController($app['event_repository'], $app['entryapi.link_base_url']);
 
                 return $controller;
             }
