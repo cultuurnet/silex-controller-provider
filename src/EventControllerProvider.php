@@ -47,6 +47,14 @@ class EventControllerProvider implements ControllerProviderInterface
         /** @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];
 
+        $app['event_controller'] = $app->share(
+            function (Application $app) {
+                $controller = new EventController($app['event_repository']);
+
+                return $controller;
+            }
+        );
+
         $controllers->post(
             '/event',
             function (Request $request, Application $app) {
@@ -110,41 +118,7 @@ class EventControllerProvider implements ControllerProviderInterface
             }
         );
 
-        $controllers->post(
-            '/event/{cdbid}/translations',
-            function (Request $request, Application $app, $cdbid) {
-                $callback = function () use ($request, $app, $cdbid) {
-                    $repository = $app['event_repository'];
-
-                    if ($request->getContentType() !== 'form') {
-                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
-                        return $rsp;
-                    }
-
-                    $language = strtolower($request->request->get('lang'));
-                    $title = $request->request->get('title');
-                    $shortDescription = $request->request->get('shortdescription');
-                    $longDescription = $request->request->get('longdescription');
-                    $eventId = new String($cdbid);
-
-                    $command = new ApplyTranslation(
-                        $eventId,
-                        new Language($language),
-                        new String($title),
-                        new String($shortDescription),
-                        new String($longDescription)
-                    );
-
-                    $commandHandler = new EntryAPIEventCommandHandler($repository);
-                    $commandHandler->handle($command);
-                    $link = $app['entryapi.link_base_url'] . $cdbid;
-                    $rsp = new Rsp('0.1', 'INFO', 'TranslationCreated', $link, null);
-                    return $rsp;
-                };
-
-                return $this->processEventRequest($callback);
-            }
-        );
+        $controllers->post('/event/{cdbid}/translations', 'event_controller:translate');
 
         $controllers->put(
             '/event/{cdbid}',

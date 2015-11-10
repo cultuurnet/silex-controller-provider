@@ -24,17 +24,17 @@ class ApplyTranslation
     protected $language;
 
     /**
-     * @var String
+     * @var String|String
      */
     protected $title;
 
     /**
-     * @var String
+     * @var String|String
      */
     protected $shortDescription;
 
     /**
-     * @var String
+     * @var String|String
      */
     protected $longDescription;
 
