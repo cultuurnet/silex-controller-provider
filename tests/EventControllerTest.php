@@ -99,7 +99,6 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(400, $response->getStatusCode());
 
-        $link = $this->entryapiLinkBaseUrl . $cdbid;
         $rsp = $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
 
         $this->assertEquals($rsp->toXml(), $response->getContent());
