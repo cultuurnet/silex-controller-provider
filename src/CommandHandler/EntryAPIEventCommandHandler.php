@@ -12,7 +12,7 @@ use Broadway\CommandHandling\CommandHandler;
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
-use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -130,19 +130,16 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
     }
 
     /**
-     * @param ApplyLabels $applyLabels
+     * @param MergeLabels $applyLabels
      */
-    public function handleApplyLabels(ApplyLabels $applyLabels)
+    public function handleMergeLabels(MergeLabels $applyLabels)
     {
         /** @var Event $event */
         $event = $this->eventRepository->load(
             $applyLabels->getEventId()->toNative()
         );
 
-        $event->applyLabels(
-            $applyLabels->getEventId(),
-            $applyLabels->getKeywordsString()
-        );
+        $event->mergeLabels($applyLabels->getLabels());
 
         $this->eventRepository->save($event);
     }

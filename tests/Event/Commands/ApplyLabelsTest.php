@@ -8,7 +8,7 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
-use CultuurNet\UDB3\KeywordsString;
+use CultuurNet\UDB3SilexEntryAPI\KeywordsVisiblesPair;
 use ValueObjects\String\String;
 
 class ApplyLabelsTest extends \PHPUnit_Framework_TestCase
@@ -21,11 +21,11 @@ class ApplyLabelsTest extends \PHPUnit_Framework_TestCase
         $keywordsString = file_get_contents(__DIR__ . '/samples/KeywordsStringValid.txt');
 
         $expectedId = 'someid';
-        $expectedKeywordsString = new KeywordsString($keywordsString);
+        $expectedKeywordsString = new KeywordsVisiblesPair($keywordsString);
 
-        $applyLabels = new ApplyLabels(
+        $applyLabels = new MergeLabels(
             new String('someid'),
-            new KeywordsString($keywordsString)
+            new KeywordsVisiblesPair($keywordsString)
         );
 
         $this->assertEquals(
@@ -35,7 +35,7 @@ class ApplyLabelsTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
             $expectedKeywordsString,
-            $applyLabels->getKeywordsString()
+            $applyLabels->getLabels()
         );
     }
 }
