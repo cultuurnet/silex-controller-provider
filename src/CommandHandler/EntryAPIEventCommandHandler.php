@@ -13,6 +13,7 @@ use Broadway\Repository\RepositoryInterface;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -142,6 +143,27 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
         $event->applyLabels(
             $applyLabels->getEventId(),
             $applyLabels->getKeywordsString()
+        );
+
+        $this->eventRepository->save($event);
+    }
+
+    /**
+     * @param ApplyTranslation $applyTranslation
+     */
+    public function handleApplyTranslation(ApplyTranslation $applyTranslation)
+    {
+        /** @var Event $event */
+        $event = $this->eventRepository->load(
+            $applyTranslation->getEventId()->toNative()
+        );
+
+        $event->applyTranslation(
+            $applyTranslation->getEventId(),
+            $applyTranslation->getLanguage(),
+            $applyTranslation->getTitle(),
+            $applyTranslation->getShortDescription(),
+            $applyTranslation->getLongDescription()
         );
 
         $this->eventRepository->save($event);

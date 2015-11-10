@@ -14,10 +14,12 @@ use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\EventNotFoundException;
 use CultuurNet\UDB3\KeywordsString;
+use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -101,6 +103,42 @@ class EventControllerProvider implements ControllerProviderInterface
                     $commandHandler->handle($command);
                     $link = $app['entryapi.link_base_url'] . $cdbid;
                     $rsp = new Rsp('0.1', 'INFO', 'KeywordsCreated', $link, null);
+                    return $rsp;
+                };
+
+                return $this->processEventRequest($callback);
+            }
+        );
+
+        $controllers->post(
+            '/event/{cdbid}/translations',
+            function (Request $request, Application $app, $cdbid) {
+                $callback = function () use ($request, $app, $cdbid) {
+                    $repository = $app['event_repository'];
+
+                    if ($request->getContentType() !== 'form') {
+                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
+                        return $rsp;
+                    }
+
+                    $language = strtolower($request->request->get('lang'));
+                    $title = $request->request->get('title');
+                    $shortDescription = $request->request->get('shortdescription');
+                    $longDescription = $request->request->get('longdescription');
+                    $eventId = new String($cdbid);
+
+                    $command = new ApplyTranslation(
+                        $eventId,
+                        new Language($language),
+                        new String($title),
+                        new String($shortDescription),
+                        new String($longDescription)
+                    );
+
+                    $commandHandler = new EntryAPIEventCommandHandler($repository);
+                    $commandHandler->handle($command);
+                    $link = $app['entryapi.link_base_url'] . $cdbid;
+                    $rsp = new Rsp('0.1', 'INFO', 'TranslationCreated', $link, null);
                     return $rsp;
                 };
 
