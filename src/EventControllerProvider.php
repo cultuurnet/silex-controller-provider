@@ -46,7 +46,7 @@ class EventControllerProvider implements ControllerProviderInterface
         /** @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];
 
-        $app['event_controller'] = $app->share(
+        $app['entryapi_event_controller'] = $app->share(
             function (Application $app) {
                 $controller = new EventController($app['event_repository'], $app['entryapi.link_base_url']);
 
@@ -117,7 +117,7 @@ class EventControllerProvider implements ControllerProviderInterface
             }
         );
 
-        $controllers->post('/event/{cdbid}/translations', 'event_controller:translate');
+        $controllers->post('/event/{cdbid}/translations', 'entryapi_event_controller:translate');
 
         $controllers->put(
             '/event/{cdbid}',
