@@ -52,8 +52,6 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
             ->method('load')
             ->with($cdbid)
             ->willReturn($event);
-        $this->eventRepository->method('load')
-            ->willReturn($this->event);
         $this->entryapiLinkBaseUrl = 'http://www.uitdatabank.be/api/v3/event/';
 
         $this->controller = new EventController($this->eventRepository, $this->entryapiLinkBaseUrl);
