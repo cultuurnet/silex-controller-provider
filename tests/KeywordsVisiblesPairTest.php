@@ -19,7 +19,9 @@ class KeywordsVisiblesPairTest extends \PHPUnit_Framework_TestCase
      */
     public function it_refuses_too_many_visibles_values()
     {
-        $this->setExpectedException(\CultuurNet\UDB3\UnequalAmountOfValuesException::class);
+        $this->setExpectedException(
+            UnequalAmountOfValuesException::class
+        );
         new KeywordsVisiblesPair(
             new String('keyword a;keyword b'),
             new String('false;true;false')
@@ -31,7 +33,9 @@ class KeywordsVisiblesPairTest extends \PHPUnit_Framework_TestCase
      */
     public function it_refuses_too_many_keywords_values()
     {
-        $this->setExpectedException(\CultuurNet\UDB3\UnequalAmountOfValuesException::class);
+        $this->setExpectedException(
+            UnequalAmountOfValuesException::class
+        );
         new KeywordsVisiblesPair(
             new String('keyword a;keyword b;keyword c'),
             new String('false;true')

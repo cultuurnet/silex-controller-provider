@@ -10,7 +10,6 @@ namespace CultuurNet\UDB3SilexEntryAPI;
 
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\LabelCollection;
-use CultuurNet\UDB3\UnequalAmountOfValuesException;
 use ValueObjects\String\String;
 
 class KeywordsVisiblesPair
