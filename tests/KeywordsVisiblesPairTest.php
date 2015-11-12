@@ -8,6 +8,8 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
+use CultuurNet\UDB3\Label;
+use CultuurNet\UDB3\LabelCollection;
 use ValueObjects\String\String;
 
 class KeywordsVisiblesPairTest extends \PHPUnit_Framework_TestCase
@@ -32,7 +34,7 @@ class KeywordsVisiblesPairTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(\CultuurNet\UDB3\UnequalAmountOfValuesException::class);
         new KeywordsVisiblesPair(
             new String('keyword a;keyword b;keyword c'),
-            new String('false, true')
+            new String('false;true')
         );
     }
 
@@ -51,5 +53,52 @@ class KeywordsVisiblesPairTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($expectedKeywords, $pair->getKeywords());
         $this->assertEquals($expectedVisibles, $pair->getVisibles());
+    }
+
+    /**
+     * @test
+     */
+    public function it_defaults_to_visible_if_visibles_is_empty()
+    {
+        $pair = new KeywordsVisiblesPair(
+            new String('keyword a;keyword b'),
+            new String('')
+        );
+
+        $this->assertEquals(
+            ['keyword a', 'keyword b'],
+            $pair->getKeywords()
+        );
+
+        $this->assertEquals(
+            ['true', 'true'],
+            $pair->getVisibles()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_factor_a_label_collection()
+    {
+        $pair = new KeywordsVisiblesPair(
+            new String('keyword a;keyword b;keyword c'),
+            new String('false;true;true')
+        );
+
+        $expectedLabels = new LabelCollection(
+            [
+                new Label('keyword a', false),
+                new Label('keyword b', true),
+                new Label('keyword c', true),
+            ]
+        );
+
+        $labels = $pair->getLabels();
+
+        $this->assertEquals(
+            $expectedLabels,
+            $labels
+        );
     }
 }
