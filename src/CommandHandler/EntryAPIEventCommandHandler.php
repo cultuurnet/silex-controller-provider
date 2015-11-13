@@ -57,7 +57,6 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
      * @throws SchemaValidationException
      * @throws ElementNotFoundException
      * @throws SuspiciousContentException
-     * @throws EventUpdatedException
      */
     public function handleAddEventFromCdbXml(
         AddEventFromCdbXml $addEventFromCdbXml
