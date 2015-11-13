@@ -9,6 +9,7 @@
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
 use CultuurNet\UDB3\Language;
+use InvalidArgumentException;
 use ValueObjects\String\String;
 
 class ApplyTranslationTest extends \PHPUnit_Framework_TestCase
@@ -55,6 +56,25 @@ class ApplyTranslationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             $expectedLongDescription,
             $applyTranslation->getLongDescription()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_error_if_no_title_and_no_longdescription_are_given()
+    {
+        $this->setExpectedException(
+            InvalidArgumentException::class,
+            'At least one of title or longdescription need to be given.'
+        );
+
+        $applyTranslation = new ApplyTranslation(
+            new String('someid'),
+            new Language('fr'),
+            null,
+            null,
+            null
         );
     }
 }

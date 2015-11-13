@@ -9,6 +9,7 @@
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
 use CultuurNet\UDB3\Language;
+use InvalidArgumentException;
 use ValueObjects\String\String;
 
 class ApplyTranslation
@@ -53,6 +54,12 @@ class ApplyTranslation
         String $shortDescription = null,
         String $longDescription = null
     ) {
+        if ($title === null && $longDescription === null) {
+            throw new InvalidArgumentException(
+                'At least one of title or longdescription need to be given.'
+            );
+        }
+
         $this->eventId = $eventId;
         $this->language = $language;
         $this->title = $title;
