@@ -13,12 +13,11 @@ use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\EventNotFoundException;
-use CultuurNet\UDB3\KeywordsString;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
-use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyLabels;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -101,10 +100,19 @@ class EventControllerProvider implements ControllerProviderInterface
                         return $rsp;
                     }
 
-                    $keywordsString = new KeywordsString($request->getContent());
+                    $keywordsString = new String($request->request->get('keywords', ''));
+                    $visiblesString = new String($request->request->get('visibles', ''));
+
+                    $keywordsVisiblesPair = new KeywordsVisiblesPair(
+                        $keywordsString,
+                        $visiblesString
+                    );
                     $eventId = new String($cdbid);
 
-                    $command = new ApplyLabels($eventId, $keywordsString);
+                    $command = new MergeLabels(
+                        $eventId,
+                        $keywordsVisiblesPair->getLabels()
+                    );
 
                     $commandHandler = new EntryAPIEventCommandHandler($repository);
                     $commandHandler->handle($command);

@@ -8,10 +8,11 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI\Event\Commands;
 
-use CultuurNet\UDB3\KeywordsString;
+use CultuurNet\UDB3\Label;
+use CultuurNet\UDB3\LabelCollection;
 use ValueObjects\String\String;
 
-class ApplyLabels
+class MergeLabels
 {
     /**
      * @var String|String
@@ -19,18 +20,18 @@ class ApplyLabels
     protected $eventId;
 
     /**
-     * @var KeywordsString
+     * @var LabelCollection
      */
-    protected $keywordsString;
+    protected $labels;
 
     /**
      * @param String $eventId
-     * @param KeywordsString $keywordsString
+     * @param LabelCollection $labels
      */
-    public function __construct(String $eventId, KeywordsString $keywordsString)
+    public function __construct(String $eventId, LabelCollection $labels)
     {
         $this->eventId = $eventId;
-        $this->keywordsString = $keywordsString;
+        $this->labels = $labels;
     }
 
     /**
@@ -42,10 +43,10 @@ class ApplyLabels
     }
 
     /**
-     * @return KeywordsString
+     * @return LabelCollection
      */
-    public function getKeywordsString()
+    public function getLabels()
     {
-        return $this->keywordsString;
+        return $this->labels;
     }
 }
