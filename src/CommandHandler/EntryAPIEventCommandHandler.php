@@ -136,7 +136,6 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
         );
 
         $event->applyTranslation(
-            $applyTranslation->getEventId(),
             $applyTranslation->getLanguage(),
             $applyTranslation->getTitle(),
             $applyTranslation->getShortDescription(),
