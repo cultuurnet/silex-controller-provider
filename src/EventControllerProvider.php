@@ -16,9 +16,7 @@ use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\Event\ReadModel\Permission\PermissionQueryInterface;
 use CultuurNet\UDB3\EventNotFoundException;
-use CultuurNet\UDB3SilexEntryAPI\KeywordsVisiblesPair;
 use CultuurNet\UDB3\XMLSyntaxException;
-use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EventFromCdbXmlCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
@@ -53,7 +51,7 @@ class EventControllerProvider implements ControllerProviderInterface
         $app['entry_api.command_handler'] = $app->share(
             function (Application $app) {
                 return new SecurityDecoratedCommandHandler(
-                    new EventFromCdbXmlCommandHandler(
+                    new EntryAPIEventCommandHandler(
                         $app['event_repository']
                     ),
                     $app['event.security']
