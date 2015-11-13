@@ -243,26 +243,6 @@ class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_updates_an_event_when_posting_xml_with_a_cdbid()
-    {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/ValidWithCdbid.xml'));
-        $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
-
-        $this->eventRepository->expects($this->once())
-            ->method('load')
-            ->with('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
-
-        $this->eventRepository->expects($this->once())
-            ->method('save');
-
-        $this->setExpectedException(EventUpdatedException::class);
-
-        $this->eventFromCdbXmlCommandHandler->handle($addEventFromCdbXml);
-    }
-
-    /**
-     * @test
-     */
     public function it_creates_an_event_when_posting_xml_without_a_cdbid()
     {
         $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
