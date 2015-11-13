@@ -89,7 +89,6 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
         $request = new Request();
         $request->create('/event/someId/translations', 'post', [], [], [], [], []);
-        //$request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
         $request->request->set('lang', 'fr');
         $request->request->set('title', 'Titre');
         $request->request->set('shortdescription', 'Une courte description.');
@@ -100,6 +99,50 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(400, $response->getStatusCode());
 
         $rsp = $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
+
+        $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_error_if_language_is_not_provided()
+    {
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+        $request = new Request();
+        $request->create('/event/someId/translations', 'post', [], [], [], [], []);
+        $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('title', 'Titre');
+        $request->request->set('shortdescription', 'Une courte description.');
+        $request->request->set('longdescription', 'Une longue description.');
+
+        $response = $this->controller->translate($request, $cdbid);
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $rsp = $rsp = rsp::error('UnexpectedFailure', 'Language code is required.');
+
+        $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_to_a_title_translation()
+    {
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+        $request = new Request();
+        $request->create('/event/someId/translations', 'post', [], [], [], [], []);
+        $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('lang', 'fr');
+        $request->request->set('title', 'Titre');
+
+        $response = $this->controller->translate($request, $cdbid);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $link = $this->entryapiLinkBaseUrl . $cdbid;
+        $rsp = new Rsp('0.1', 'INFO', 'TranslationCreated', $link, null);
 
         $this->assertEquals($rsp->toXml(), $response->getContent());
     }

@@ -42,16 +42,16 @@ class ApplyTranslation
      * ApplyTranslation constructor.
      * @param String $eventId
      * @param Language $language
-     * @param String $title
-     * @param String $shortDescription
-     * @param String $longDescription
+     * @param String|null $title
+     * @param String|null $shortDescription
+     * @param String|null $longDescription
      */
     public function __construct(
         String $eventId,
         Language $language,
-        String $title,
-        String $shortDescription,
-        String $longDescription
+        String $title = null,
+        String $shortDescription = null,
+        String $longDescription = null
     ) {
         $this->eventId = $eventId;
         $this->language = $language;
@@ -77,7 +77,7 @@ class ApplyTranslation
     }
 
     /**
-     * @return String
+     * @return String|null
      */
     public function getTitle()
     {
@@ -85,7 +85,7 @@ class ApplyTranslation
     }
 
     /**
-     * @return String
+     * @return String|null
      */
     public function getShortDescription()
     {
@@ -93,7 +93,7 @@ class ApplyTranslation
     }
 
     /**
-     * @return String
+     * @return String|null
      */
     public function getLongDescription()
     {

@@ -23,6 +23,7 @@ use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooLargeException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use ValueObjects\String\String;
@@ -55,18 +56,37 @@ class EventController
                 return $rsp;
             }
 
-            $language = strtolower($request->request->get('lang'));
-            $title = $request->request->get('title');
-            $shortDescription = $request->request->get('shortdescription');
-            $longDescription = $request->request->get('longdescription');
+            if ($request->request->has('lang')) {
+                $language = strtolower($request->request->get('lang'));
+            } else {
+                throw new InvalidArgumentException(
+                    'Language code is required.'
+                );
+            }
+
+            $title = null;
+            if ($request->request->has('title')) {
+                $title = new String($request->request->get('title'));
+            }
+
+            $shortDescription = null;
+            if ($request->request->has('shortdescription')) {
+                $shortDescription = new String($request->request->get('shortdescription'));
+            }
+
+            $longDescription = null;
+            if ($request->request->has('longdescription')) {
+                $longDescription = new String($request->request->get('longdescription'));
+            }
+
             $eventId = new String($cdbid);
 
             $command = new ApplyTranslation(
                 $eventId,
                 new Language($language),
-                new String($title),
-                new String($shortDescription),
-                new String($longDescription)
+                $title,
+                $shortDescription,
+                $longDescription
             );
 
             $commandHandler = new EntryAPIEventCommandHandler($repository);
