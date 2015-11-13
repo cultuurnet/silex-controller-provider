@@ -66,38 +66,19 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
         $dom = $this->loadDOM($xml);
 
         $namespaceURI = $dom->documentElement->namespaceURI;
-        $element = $this->getEventElement($dom);
+        $this->getEventElement($dom);
 
         $this->guardDescriptions($dom);
 
         $cdbXmlNamespaceUri = new String($namespaceURI);
 
-        /** @var Event $event */
-        $event = null;
-        $cdbid = $element->getAttribute('cdbid');
-        if (!empty($cdbid)) {
-            $event = $this->eventRepository->load($cdbid);
-        }
+        $event = Event::createFromCdbXml(
+            $addEventFromCdbXml->getEventId(),
+            $xml,
+            $cdbXmlNamespaceUri
+        );
 
-        if (!empty($event)) {
-            $event->updateFromCdbXml(
-                new String($cdbid),
-                $xml,
-                $cdbXmlNamespaceUri
-            );
-
-            $this->eventRepository->save($event);
-
-            throw new EventUpdatedException($cdbid);
-        } else {
-            $event = Event::createFromCdbXml(
-                $addEventFromCdbXml->getEventId(),
-                $xml,
-                $cdbXmlNamespaceUri
-            );
-
-            $this->eventRepository->save($event);
-        }
+        $this->eventRepository->save($event);
     }
 
     /**
