@@ -16,6 +16,7 @@ use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\Event\ReadModel\Permission\PermissionQueryInterface;
 use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
@@ -61,6 +62,17 @@ class EventControllerProvider implements ControllerProviderInterface
 
         /** @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];
+
+        $app['entryapi_event_controller'] = $app->share(
+            function (Application $app) {
+                $controller = new EventController(
+                    $app['event_repository'],
+                    $app['entryapi.link_base_url']
+                );
+
+                return $controller;
+            }
+        );
 
         $controllers->get(
             'event/checkpermission',
@@ -197,6 +209,8 @@ class EventControllerProvider implements ControllerProviderInterface
                 return $this->processEventRequest($callback);
             }
         );
+
+        $controllers->post('/event/{cdbid}/translations', 'entryapi_event_controller:translate');
 
         $controllers->put(
             '/event/{cdbid}',

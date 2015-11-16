@@ -11,10 +11,11 @@ use Broadway\Repository\RepositoryInterface;
 use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\Keyword;
 use CultuurNet\UDB3\Event\Event;
+use CultuurNet\UDB3\Language;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\LabelCollection;
-use CultuurNet\UDB3SilexEntryAPI\KeywordsVisiblesPair;
-use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
@@ -279,5 +280,28 @@ class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
             ->method('save');
 
         $this->eventFromCdbXmlCommandHandler->handle($mergeLabels);
+    }
+
+    /**
+     * @test
+     */
+    public function it_applies_a_translation()
+    {
+        $applyTranslation = new ApplyTranslation(
+            new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
+            new Language('fr'),
+            new String('Dizorkestra en concert'),
+            new String('Concert Dizôrkestra, un groupe qui.'),
+            new String('Concert Dizôrkestra, un groupe qui se montre inventif.')
+        );
+
+        $this->eventRepository->expects($this->once())
+            ->method('load')
+            ->with('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+
+        $this->eventRepository->expects($this->once())
+            ->method('save');
+
+        $this->eventFromCdbXmlCommandHandler->handle($applyTranslation);
     }
 }
