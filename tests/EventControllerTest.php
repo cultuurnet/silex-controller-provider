@@ -146,4 +146,25 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($rsp->toXml(), $response->getContent());
     }
+
+    /**
+     * @test
+     */
+    public function it_can_respond_to_a_translation_deletion()
+    {
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+        $request = new Request();
+        $request->create('/event/someId/translations', 'delete', [], [], [], [], []);
+        $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('lang', 'fr');
+
+        $response = $this->controller->deleteTranslation($request, $cdbid);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $link = $this->entryapiLinkBaseUrl . $cdbid;
+        $rsp = new Rsp('0.1', 'INFO', 'TranslationWithdrawn', $link, null);
+
+        $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
 }

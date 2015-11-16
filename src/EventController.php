@@ -16,6 +16,7 @@ use CultuurNet\UDB3\UDB2\EventRepository;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
@@ -93,6 +94,41 @@ class EventController
             $commandHandler->handle($command);
             $link = $this->entryapiLinkBaseUrl . $cdbid;
             $rsp = new Rsp('0.1', 'INFO', 'TranslationCreated', $link, null);
+            return $rsp;
+        };
+
+        return $this->processEventRequest($callback);
+    }
+
+    public function deleteTranslation(Request $request, $cdbid)
+    {
+        $callback = function () use ($request, $cdbid) {
+            $repository = $this->eventRepository;
+
+            if ($request->getContentType() !== 'form') {
+                $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
+                return $rsp;
+            }
+
+            if ($request->request->has('lang')) {
+                $language = strtolower($request->request->get('lang'));
+            } else {
+                throw new InvalidArgumentException(
+                    'Language code is required.'
+                );
+            }
+
+            $eventId = new String($cdbid);
+
+            $command = new DeleteTranslation(
+                $eventId,
+                new Language($language)
+            );
+
+            $commandHandler = new EntryAPIEventCommandHandler($repository);
+            $commandHandler->handle($command);
+            $link = $this->entryapiLinkBaseUrl . $cdbid;
+            $rsp = new Rsp('0.1', 'INFO', 'TranslationWithdrawn', $link, null);
             return $rsp;
         };
 
