@@ -14,7 +14,7 @@ use ValueObjects\String\String;
 class DeleteTranslation
 {
     /**
-     * @var String|String
+     * @var String
      */
     protected $eventId;
 
