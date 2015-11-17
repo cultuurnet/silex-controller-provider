@@ -105,13 +105,8 @@ class EventController
         $callback = function () use ($request, $cdbid) {
             $repository = $this->eventRepository;
 
-            if ($request->getContentType() !== 'form') {
-                $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
-                return $rsp;
-            }
-
-            if ($request->request->has('lang')) {
-                $language = strtolower($request->request->get('lang'));
+            if ($request->query->has('lang')) {
+                $language = strtolower($request->query->get('lang'));
             } else {
                 throw new InvalidArgumentException(
                     'Language code is required.'

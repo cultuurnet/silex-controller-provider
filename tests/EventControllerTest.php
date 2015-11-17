@@ -155,8 +155,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
         $request = new Request();
         $request->create('/event/someId/translations', 'delete', [], [], [], [], []);
-        $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
-        $request->request->set('lang', 'fr');
+        $request->query->set('lang', 'fr');
 
         $response = $this->controller->deleteTranslation($request, $cdbid);
 
