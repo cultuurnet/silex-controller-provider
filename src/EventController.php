@@ -12,9 +12,11 @@ use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\EventNotFoundException;
 use CultuurNet\UDB3\Language;
+use CultuurNet\UDB3\LinkType;
 use CultuurNet\UDB3\UDB2\EventRepository;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddLink;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
@@ -124,6 +126,83 @@ class EventController
             $commandHandler->handle($command);
             $link = $this->entryapiLinkBaseUrl . $cdbid;
             $rsp = new Rsp('0.1', 'INFO', 'TranslationWithdrawn', $link, null);
+            return $rsp;
+        };
+
+        return $this->processEventRequest($callback);
+    }
+
+    public function addLink(Request $request, $cdbid)
+    {
+        $callback = function () use ($request, $cdbid) {
+            $repository = $this->eventRepository;
+
+            if ($request->getContentType() !== 'form') {
+                $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
+                return $rsp;
+            }
+
+            if ($request->request->has('lang')) {
+                $language = strtolower($request->request->get('lang'));
+            } else {
+                throw new InvalidArgumentException(
+                    'Language code is required.'
+                );
+            }
+
+            if ($request->request->has('link')) {
+                $link = strtolower($request->request->get('link'));
+            } else {
+                throw new InvalidArgumentException(
+                    'Link is required.'
+                );
+            }
+
+            if ($request->request->has('linktype')) {
+                $linktype = strtolower($request->request->get('linktype'));
+            } else {
+                throw new InvalidArgumentException(
+                    'Link type is required.'
+                );
+            }
+
+            $title = null;
+            if ($request->request->has('title')) {
+                $title = new String($request->request->get('title'));
+            }
+
+            $copyright = null;
+            if ($request->request->has('copyright')) {
+                $copyright = new String($request->request->get('copyright'));
+            }
+
+            $subbrand = null;
+            if ($request->request->has('subbrand')) {
+                $subbrand = new String($request->request->get('subbrand'));
+            }
+
+            $description = null;
+            if ($request->request->has('description')) {
+                $description = new String($request->request->get('description'));
+            }
+
+            $eventId = new String($cdbid);
+
+            $command = new AddLink(
+                $eventId,
+                new Language($language),
+                new String($link),
+                new LinkType($linktype),
+                $title,
+                $copyright,
+                $subbrand,
+                $description
+            );
+
+            $commandHandler = new EntryAPIEventCommandHandler($repository);
+            $commandHandler->handle($command);
+            $link = $this->entryapiLinkBaseUrl . $cdbid;
+            $rsp = new Rsp('0.1', 'INFO', 'LinkCreated', $link, null);
             return $rsp;
         };
 

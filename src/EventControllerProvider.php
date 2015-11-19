@@ -214,6 +214,8 @@ class EventControllerProvider implements ControllerProviderInterface
 
         $controllers->delete('/event/{cdbid}/translations', 'entryapi_event_controller:deleteTranslation');
 
+        $controllers->post('/event/{cdbid}/links', 'entryapi_event_controller:addLink');
+
         $controllers->put(
             '/event/{cdbid}',
             function (Request $request, Application $app, $cdbid) {
