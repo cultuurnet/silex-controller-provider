@@ -60,9 +60,9 @@ class AddLink
         String $link,
         LinkType $linkType,
         String $title = null,
-        String $copyright,
-        String $subbrand,
-        String $description
+        String $copyright = null,
+        String $subbrand = null,
+        String $description = null
     ) {
         $this->eventId = $eventId;
         $this->language = $language;
