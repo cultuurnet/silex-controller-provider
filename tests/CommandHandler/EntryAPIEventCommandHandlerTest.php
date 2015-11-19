@@ -12,7 +12,9 @@ use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\Keyword;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3\Language;
+use CultuurNet\UDB3\LinkType;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddLink;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\LabelCollection;
@@ -324,5 +326,31 @@ class EntryAPIEventCommandHandlerTest extends PHPUnit_Framework_TestCase
             ->method('save');
 
         $this->eventFromCdbXmlCommandHandler->handle($deleteTranslation);
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_a_link()
+    {
+        $addLink = new AddLink(
+            new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
+            new Language('fr'),
+            new String('http://cultuurnet.be'),
+            new LinkType('roadmap'),
+            null,
+            null,
+            null,
+            null
+        );
+
+        $this->eventRepository->expects($this->once())
+            ->method('load')
+            ->with('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+
+        $this->eventRepository->expects($this->once())
+            ->method('save');
+
+        $this->eventFromCdbXmlCommandHandler->handle($addLink);
     }
 }

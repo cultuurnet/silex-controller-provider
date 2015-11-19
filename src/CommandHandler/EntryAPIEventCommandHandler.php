@@ -12,6 +12,7 @@ use Broadway\CommandHandling\CommandHandler;
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddLink;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
@@ -158,6 +159,29 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
 
         $event->deleteTranslation(
             $deleteTranslation->getLanguage()
+        );
+
+        $this->eventRepository->save($event);
+    }
+
+    /**
+     * @param AddLink $addLink
+     */
+    public function handleAddLink(AddLink $addLink)
+    {
+        /** @var Event $event */
+        $event = $this->eventRepository->load(
+            $addLink->getEventId()->toNative()
+        );
+
+        $event->addLink(
+            $addLink->getLanguage(),
+            $addLink->getLink(),
+            $addLink->getLinkType(),
+            $addLink->getTitle(),
+            $addLink->getCopyright(),
+            $addLink->getSubbrand(),
+            $addLink->getDescription()
         );
 
         $this->eventRepository->save($event);
