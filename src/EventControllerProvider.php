@@ -214,38 +214,46 @@ class EventControllerProvider implements ControllerProviderInterface
 
         $controllers->delete('/event/{cdbid}/translations', 'entryapi_event_controller:deleteTranslation');
 
+        $putCallback = function (Request $request, Application $app, $cdbid) {
+            $callback = function () use ($request, $app, $cdbid) {
+                // First try to retrieve the event from the JSON-LD read model.
+                // This will result in a EventNotFoundException if the event
+                // does not exist.
+                /** @var \CultuurNet\UDB3\EventServiceInterface $service */
+                $service = $app['event_service'];
+                $service->getEvent($cdbid);
+
+                if ($request->getContentType() !== 'xml') {
+                    $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
+                    return $this->createResponse($rsp);
+                }
+
+                $xml = new SizeLimitedEventXmlString($request->getContent());
+                $eventId = new String($cdbid);
+
+                $command = new UpdateEventFromCdbXml($eventId, $xml);
+
+                $commandHandler = $app['entry_api.command_handler'];
+
+                $commandHandler->handle($command);
+
+                $link = $app['entryapi.link_base_url'] . $eventId;
+                $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
+                return $rsp;
+            };
+
+            return $this->processEventRequest($callback);
+        };
+
         $controllers->put(
             '/event/{cdbid}',
-            function (Request $request, Application $app, $cdbid) {
-                $callback = function () use ($request, $app, $cdbid) {
-                    // First try to retrieve the event from the JSON-LD read model.
-                    // This will result in a EventNotFoundException if the event
-                    // does not exist.
-                    /** @var \CultuurNet\UDB3\EventServiceInterface $service */
-                    $service = $app['event_service'];
-                    $service->getEvent($cdbid);
+            $putCallback
+        );
 
-                    if ($request->getContentType() !== 'xml') {
-                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
-                        return $this->createResponse($rsp);
-                    }
-
-                    $xml = new SizeLimitedEventXmlString($request->getContent());
-                    $eventId = new String($cdbid);
-
-                    $command = new UpdateEventFromCdbXml($eventId, $xml);
-
-                    $commandHandler = $app['entry_api.command_handler'];
-
-                    $commandHandler->handle($command);
-
-                    $link = $app['entryapi.link_base_url'] . $eventId;
-                    $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
-                    return $rsp;
-                };
-
-                return $this->processEventRequest($callback);
-            }
+        // Culturefeed Entry UI Drupal module seems to use POST instead of PUT.
+        $controllers->post(
+            '/event/{cdbid}',
+            $putCallback
         );
 
         return $controllers;
