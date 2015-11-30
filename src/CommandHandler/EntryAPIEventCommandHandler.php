@@ -10,6 +10,7 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
 use Broadway\Repository\RepositoryInterface;
+use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
@@ -17,7 +18,6 @@ use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
-use CultuurNet\UDB3SilexEntryAPI\Exceptions\EventUpdatedException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
@@ -163,6 +163,17 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
         $this->eventRepository->save($event);
     }
 
+    /**
+     * @param Unlabel $label
+     */
+    protected function handleUnlabel(Unlabel $label)
+    {
+        /** @var Event $event */
+        $event = $this->eventRepository->load($label->getEventId());
+        $event->unlabel($label->getLabel());
+
+        $this->eventRepository->save($event);
+    }
 
     /**
      * @param DOMDocument $dom

@@ -10,12 +10,15 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 use Broadway\CommandHandling\Testing\CommandHandlerScenarioTestCase;
 use Broadway\EventHandling\EventBusInterface;
 use Broadway\EventStore\EventStoreInterface;
+use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\Event\EventRepository;
 use CultuurNet\UDB3\Event\Events\EventCreatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventUpdatedFromCdbXml;
+use CultuurNet\UDB3\Event\Events\EventWasLabelled;
 use CultuurNet\UDB3\Event\Events\LabelsMerged;
 use CultuurNet\UDB3\Event\Events\TranslationApplied;
 use CultuurNet\UDB3\Event\Events\TranslationDeleted;
+use CultuurNet\UDB3\Event\Events\Unlabelled;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\LabelCollection;
 use CultuurNet\UDB3\Language;
@@ -431,6 +434,37 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
                     new TranslationDeleted(
                         $this->id,
                         new Language('fr')
+                    )
+                ]
+            );
+    }
+
+    /**
+     * @test
+     */
+    public function it_unlabels()
+    {
+        $label = new Label('classic rock');
+
+        $unlabel = new Unlabel($this->id, $label);
+
+        $this->scenario
+            ->withAggregateId($this->id)
+            ->given(
+                [
+                    $this->eventCreated,
+                    new EventWasLabelled(
+                        $this->id->toNative(),
+                        $label
+                    ),
+                ]
+            )
+            ->when($unlabel)
+            ->then(
+                [
+                    new Unlabelled(
+                        $this->id->toNative(),
+                        $label
                     )
                 ]
             );
