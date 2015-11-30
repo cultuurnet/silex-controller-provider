@@ -8,18 +8,14 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
-use Broadway\Repository\RepositoryInterface;
-use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\EventPermission;
 use CultuurNet\Entry\EventPermissionCollection;
 use CultuurNet\Entry\Rsp;
-use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\Event\ReadModel\Permission\PermissionQueryInterface;
 use CultuurNet\UDB3\EventNotFoundException;
-use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\XMLSyntaxException;
-use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
+use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
@@ -33,12 +29,9 @@ use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use ValueObjects\String\String;
 
 class EventControllerProvider implements ControllerProviderInterface
@@ -209,6 +202,8 @@ class EventControllerProvider implements ControllerProviderInterface
                 return $this->processEventRequest($callback);
             }
         );
+
+        $controllers->delete('/event/{cdbid}/keywords', 'entryapi_event_controller:deleteKeyword');
 
         $controllers->post('/event/{cdbid}/translations', 'entryapi_event_controller:translate');
 
