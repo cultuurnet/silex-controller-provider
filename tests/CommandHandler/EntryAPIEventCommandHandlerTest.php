@@ -24,7 +24,10 @@ use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
 use CultuurNet\UDB3SilexEntryAPI\SizeLimitedEventXmlString;
@@ -55,9 +58,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
         parent::setUp();
 
         $this->id = new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
-        $xml = new SizeLimitedEventXmlString(
-            file_get_contents(__DIR__ . '/ValidWithCdbid.xml')
-        );
+        $xml = $this->loadXmlString('ValidWithCdbid.xml');
+
         $this->namespaceUri = new String(
             'http://www.cultuurdatabank.com/XMLSchema/CdbXSD/3.3/FINAL'
         );
@@ -82,13 +84,23 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
     }
 
     /**
+     * @param string $file
+     * @return SizeLimitedEventXmlString
+     */
+    protected function loadXmlString($file)
+    {
+        return new SizeLimitedEventXmlString(
+            file_get_contents(__DIR__ . '/' . $file)
+        );
+    }
+
+    /**
      * @test
      */
     public function it_validates_the_xml_namespace()
     {
-        $xml = new SizeLimitedEventXmlString(
-            file_get_contents(__DIR__ . '/InvalidNamespace.xml')
-        );
+        $xml = $this->loadXmlString('InvalidNamespace.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(UnexpectedNamespaceException::class);
@@ -101,7 +113,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_the_xml_namespace_for_update()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/InvalidNamespace.xml'));
+        $xml = $this->loadXmlString('InvalidNamespace.xml');
+
         $updateEventFromCdbXml = new UpdateEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(UnexpectedNamespaceException::class);
@@ -114,7 +127,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_the_root_element()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/InvalidRootElement.xml'));
+        $xml = $this->loadXmlString('InvalidRootElement.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(UnexpectedRootElementException::class);
@@ -127,7 +141,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_the_root_element_for_update()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/InvalidRootElement.xml'));
+        $xml = $this->loadXmlString('InvalidRootElement.xml');
+
         $updateEventFromCdbXml = new UpdateEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(UnexpectedRootElementException::class);
@@ -140,7 +155,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_against_the_xml_schema()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/InvalidSchemaTitleMissing.xml'));
+        $xml = $this->loadXmlString('InvalidSchemaTitleMissing.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(SchemaValidationException::class);
@@ -153,7 +169,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_against_the_xml_schema_for_update()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/InvalidSchemaTitleMissing.xml'));
+        $xml = $this->loadXmlString('InvalidSchemaTitleMissing.xml');
+
         $updateEventFromCdbXml = new UpdateEventFromCdbXml($this->id, $xml);
 
         $this->setExpectedException(SchemaValidationException::class);
@@ -167,7 +184,7 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
     public function it_accepts_valid_cdbxml()
     {
         $id = new String('foo');
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $xml = $this->loadXmlString('Valid.xml');
         $addEventFromCdbXml = new AddEventFromCdbXml($id, $xml);
 
         $this->scenario
@@ -188,7 +205,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_accepts_valid_cdbxml_for_update()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $xml = $this->loadXmlString('Valid.xml');
+
         $updateEventFromCdbXml = new UpdateEventFromCdbXml($this->id, $xml);
 
         $this->scenario
@@ -215,10 +233,13 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_too_many_events()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/TooManyEvents.xml'));
+        $xml = $this->loadXmlString('TooManyEvents.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException::class);
+        $this->setExpectedException(
+            TooManyItemsException::class
+        );
 
         $this->scenario->when($addEventFromCdbXml);
     }
@@ -228,10 +249,13 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_no_event()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/NoEventAtAll.xml'));
+        $xml = $this->loadXmlString('NoEventAtAll.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException::class);
+        $this->setExpectedException(
+            ElementNotFoundException::class
+        );
 
         $this->scenario->when($addEventFromCdbXml);
     }
@@ -241,10 +265,13 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_when_there_is_no_element_at_all()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/NoEventButActor.xml'));
+        $xml = $this->loadXmlString('NoEventButActor.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException::class);
+        $this->setExpectedException(
+            ElementNotFoundException::class
+        );
 
         $this->scenario->when($addEventFromCdbXml);
     }
@@ -254,10 +281,13 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_empty_xml()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Empty.xml'));
+        $xml = $this->loadXmlString('Empty.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException::class);
+        $this->setExpectedException(
+            ElementNotFoundException::class
+        );
 
         $this->scenario->when($addEventFromCdbXml);
     }
@@ -267,10 +297,13 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_validates_suspicious_content()
     {
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/ScriptTag.xml'));
+        $xml = $this->loadXmlString('ScriptTag.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($this->id, $xml);
 
-        $this->setExpectedException(\CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException::class);
+        $this->setExpectedException(
+            SuspiciousContentException::class
+        );
 
         $this->scenario->when($addEventFromCdbXml);
     }
@@ -281,7 +314,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
     public function it_creates_an_event_when_posting_xml_without_a_cdbid()
     {
         $id = new String('foo');
-        $xml = new SizeLimitedEventXmlString(file_get_contents(__DIR__ . '/Valid.xml'));
+        $xml = $this->loadXmlString('Valid.xml');
+
         $addEventFromCdbXml = new AddEventFromCdbXml($id, $xml);
 
         $this->scenario
