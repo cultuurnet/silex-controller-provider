@@ -10,7 +10,6 @@ namespace CultuurNet\UDB3SilexEntryAPI;
 
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
-use CultuurNet\UDB3\UDB2\EventRepository;
 use CultuurNet\UDB3\Event\Event;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,7 @@ use ValueObjects\String\String;
 class EventControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var EventRepository
+     * @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $eventRepository;
 

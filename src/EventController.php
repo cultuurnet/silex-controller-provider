@@ -14,7 +14,6 @@ use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\EventNotFoundException;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\Language;
-use CultuurNet\UDB3\UDB2\EventRepository;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
@@ -34,7 +33,7 @@ use ValueObjects\String\String;
 class EventController
 {
     /**
-     * @var EventRepository
+     * @var RepositoryInterface
      */
     protected $eventRepository;
 
@@ -205,9 +204,6 @@ class EventController
             $rsp = rsp::error('TooManyItems', $e->getMessage());
         } catch (SuspiciousContentException $e) {
             $rsp = rsp::error('SuspectedContent', $e->getMessage());
-        } catch (\CultuurNet\UDB3\UDB2\EventNotFoundException $e) {
-            $status = Response::HTTP_NOT_FOUND;
-            $rsp = rsp::error('NotFound', 'Resource not found');
         } catch (EventNotFoundException $e) {
             $status = Response::HTTP_NOT_FOUND;
             $rsp = rsp::error('NotFound', 'Resource not found');
