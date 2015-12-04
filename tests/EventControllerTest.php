@@ -106,7 +106,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_throws_an_error_if_language_is_not_provided()
+    public function it_throws_an_error_if_language_is_not_provided_for_a_translation()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
         $request = Request::create('/event/someId/translations', 'post', [], [], [], [], []);
@@ -160,6 +160,23 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
 
         $link = $this->entryapiLinkBaseUrl . $cdbid;
         $rsp = new Rsp('0.1', 'INFO', 'TranslationWithdrawn', $link, null);
+
+        $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_error_if_language_is_not_provided_for_a_translation_deletion()
+    {
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+        $request = Request::create('/event/someId/translations', 'delete', [], [], [], [], []);
+
+        $response = $this->controller->deleteTranslation($request, $cdbid);
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $rsp = $rsp = rsp::error('UnexpectedFailure', 'Language code is required.');
 
         $this->assertEquals($rsp->toXml(), $response->getContent());
     }
