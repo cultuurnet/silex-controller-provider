@@ -11,6 +11,15 @@ namespace CultuurNet\UDB3SilexEntryAPI;
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\Event;
+use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\XMLSyntaxException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\SuspiciousContentException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooLargeException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\TooManyItemsException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedNamespaceException;
+use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use ValueObjects\String\String;
@@ -200,5 +209,126 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $rsp = new Rsp('0.1', 'INFO', 'KeywordWithdrawn', $link, null);
 
         $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
+
+    /**
+     * @test
+     * @dataProvider exceptionResponseProvider
+     *
+     * @param \Exception $exception
+     * @param Rsp $expectedResponse
+     */
+    public function it_can_convert_exceptions_into_responses(
+        \Exception $exception,
+        Rsp $expectedResponse
+    ) {
+        // Technically it's not the EventRepository that throws these
+        // exceptions, but it's the easiest to mock and the code doesn't care
+        // where the exception was thrown exactly.
+        $this->eventRepository->expects($this->once())
+            ->method('save')
+            ->willThrowException($exception);
+
+        // Mocking any supported request will cause the controller to check
+        // for any exceptions. Deleting a keyword is easiest at the moment.
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+        $request = Request::create(
+            "/event/{$cdbid}/keywords",
+            Request::METHOD_DELETE
+        );
+        $request->query->set('keyword', 'foo');
+        $response = $this->controller->deleteKeyword($request, $cdbid);
+
+        // Make sure we get the expected response for the given exception.
+        $this->assertEquals($expectedResponse->toXml(), $response->getContent());
+    }
+
+    /**
+     * Data provider of responses for specific exceptions.
+     * @return array
+     */
+    public function exceptionResponseProvider()
+    {
+        $genericMessage = 'An error occurred.';
+
+        return [
+            [
+                new TooLargeException($genericMessage),
+                rsp::error(
+                    'FileSizeTooLarge',
+                    $genericMessage
+                )
+            ],
+            [
+                new XMLSyntaxException($genericMessage),
+                rsp::error(
+                    'XmlSyntaxError',
+                    $genericMessage
+                )
+            ],
+            [
+                new ElementNotFoundException('mockExpectedElement', 'mockFoundElement'),
+                rsp::error(
+                    'ElementNotFoundError',
+                    'Expected mockExpectedElement, found mockFoundElement'
+                )
+            ],
+            [
+                new UnexpectedNamespaceException('mock:invalid:ns', array('mock:valid:ns')),
+                rsp::error(
+                    'XmlSyntaxError',
+                    'Unexpected namespace "mock:invalid:ns", expected one of: mock:valid:ns'
+                )
+            ],
+            [
+                new UnexpectedRootElementException('mock-invalid-rootElement', 'mock-valid-rootElement'),
+                rsp::error(
+                    'XmlSyntaxError',
+                    'Unexpected root element "mock-invalid-rootElement", expected mock-valid-rootElement'
+                )
+            ],
+            [
+                new SchemaValidationException('mock:ns'),
+                rsp::error(
+                    'XmlSyntaxError',
+                    'The XML document does not validate with mock:ns'
+                )
+            ],
+            [
+                new TooManyItemsException(),
+                rsp::error(
+                    'TooManyItems',
+                    'Too many items in your messages.'
+                )
+            ],
+            [
+                new SuspiciousContentException(),
+                rsp::error(
+                    'SuspectedContent',
+                    'Suspicious content found. Account deactivated.'
+                )
+            ],
+            [
+                new EventNotFoundException($genericMessage),
+                rsp::error(
+                    'NotFound',
+                    'Resource not found'
+                )
+            ],
+            [
+                new \InvalidArgumentException($genericMessage),
+                rsp::error(
+                    'UnexpectedFailure',
+                    $genericMessage
+                )
+            ],
+            [
+                new \Exception($genericMessage),
+                rsp::error(
+                    'UnexpectedFailure',
+                    $genericMessage
+                )
+            ],
+        ];
     }
 }

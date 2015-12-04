@@ -209,9 +209,9 @@ class EventController
             $rsp = rsp::error('NotFound', 'Resource not found');
         } catch (\Exception $e) {
             $rsp = rsp::error('UnexpectedFailure', $e->getMessage());
-        } finally {
-            return $this->createResponse($rsp, $status);
         }
+
+        return $this->createResponse($rsp, $status);
     }
 
     /**
