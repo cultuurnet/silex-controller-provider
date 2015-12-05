@@ -72,7 +72,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     public function it_can_respond_to_a_translation()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
-        $request = Request::create('/event/someId/translations', 'post', [], [], [], [], []);
+        $request = Request::create('/event/someId/translations', Request::METHOD_POST);
         $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
         $request->request->set('lang', 'fr');
         $request->request->set('title', 'Titre');
@@ -95,7 +95,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     public function it_can_throw_an_error_if_content_type_is_not_form()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
-        $request = Request::create('/event/someId/translations', 'post', [], [], [], [], []);
+        $request = Request::create('/event/someId/translations', Request::METHOD_POST);
         $request->headers->set('Content-Type', 'text/json');
         $request->request->set('lang', 'fr');
         $request->request->set('title', 'Titre');
@@ -117,7 +117,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     public function it_throws_an_error_if_language_is_not_provided_for_a_translation()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
-        $request = Request::create('/event/someId/translations', 'post', [], [], [], [], []);
+        $request = Request::create('/event/someId/translations', Request::METHOD_POST);
         $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
         $request->request->set('title', 'Titre');
         $request->request->set('shortdescription', 'Une courte description.');
@@ -138,7 +138,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     public function it_can_respond_to_a_title_translation()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
-        $request = Request::create('/event/someId/translations', 'post', [], [], [], [], []);
+        $request = Request::create('/event/someId/translations', Request::METHOD_POST);
         $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
         $request->request->set('lang', 'fr');
         $request->request->set('title', 'Titre');
@@ -159,7 +159,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     public function it_can_respond_to_a_translation_deletion()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
-        $request = Request::create('/event/someId/translations', 'delete', [], [], [], [], []);
+        $request = Request::create('/event/someId/translations', Request::METHOD_DELETE);
         $request->query->set('lang', 'fr');
 
         $response = $this->controller->deleteTranslation($request, $cdbid);
@@ -178,7 +178,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     public function it_throws_an_error_if_language_is_not_provided_for_a_translation_deletion()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
-        $request = Request::create('/event/someId/translations', 'delete', [], [], [], [], []);
+        $request = Request::create('/event/someId/translations', Request::METHOD_DELETE);
 
         $response = $this->controller->deleteTranslation($request, $cdbid);
 
