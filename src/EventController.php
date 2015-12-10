@@ -1,19 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nicolas
- * Date: 10/11/15
- * Time: 11:27
- */
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
+use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\LinkType;
-use CultuurNet\UDB3\UDB2\EventRepository;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddLink;
@@ -34,7 +29,7 @@ use ValueObjects\String\String;
 class EventController
 {
     /**
-     * @var EventRepository
+     * @var RepositoryInterface
      */
     protected $eventRepository;
 
@@ -55,7 +50,10 @@ class EventController
             $repository = $this->eventRepository;
 
             if ($request->getContentType() !== 'form') {
-                $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not x-www-form-urlencoded.');
+                $rsp = rsp::error(
+                    'UnexpectedFailure',
+                    'Content-Type is not x-www-form-urlencoded.'
+                );
                 return $rsp;
             }
 
@@ -74,12 +72,16 @@ class EventController
 
             $shortDescription = null;
             if ($request->request->has('shortdescription')) {
-                $shortDescription = new String($request->request->get('shortdescription'));
+                $shortDescription = new String(
+                    $request->request->get('shortdescription')
+                );
             }
 
             $longDescription = null;
             if ($request->request->has('longdescription')) {
-                $longDescription = new String($request->request->get('longdescription'));
+                $longDescription = new String(
+                    $request->request->get('longdescription')
+                );
             }
 
             $eventId = new String($cdbid);
@@ -94,9 +96,11 @@ class EventController
 
             $commandHandler = new EntryAPIEventCommandHandler($repository);
             $commandHandler->handle($command);
-            $link = $this->entryapiLinkBaseUrl . $cdbid;
-            $rsp = new Rsp('0.1', 'INFO', 'TranslationCreated', $link, null);
-            return $rsp;
+
+            return $this->createInfoResponseForEvent(
+                $cdbid,
+                'TranslationCreated'
+            );
         };
 
         return $this->processEventRequest($callback);
@@ -124,9 +128,50 @@ class EventController
 
             $commandHandler = new EntryAPIEventCommandHandler($repository);
             $commandHandler->handle($command);
-            $link = $this->entryapiLinkBaseUrl . $cdbid;
-            $rsp = new Rsp('0.1', 'INFO', 'TranslationWithdrawn', $link, null);
-            return $rsp;
+
+            return $this->createInfoResponseForEvent(
+                $cdbid,
+                'TranslationWithdrawn'
+            );
+        };
+
+        return $this->processEventRequest($callback);
+    }
+
+    /**
+     * @param string $cdbid
+     * @param string $code
+     * @return Rsp
+     */
+    protected function createInfoResponseForEvent($cdbid, $code)
+    {
+        $link = $this->entryapiLinkBaseUrl . $cdbid;
+        $rsp = new Rsp('0.1', Rsp::LEVEL_INFO, $code, $link, null);
+
+        return $rsp;
+    }
+
+    /**
+     * @param Request $request
+     * @param string $cdbid
+     * @return Response
+     */
+    public function deleteKeyword(Request $request, $cdbid)
+    {
+        $label = new Label($request->query->get('keyword'));
+
+        $callback = function () use ($cdbid, $label) {
+            $command = new Unlabel($cdbid, $label);
+
+            $repository = $this->eventRepository;
+
+            $commandHandler = new EntryAPIEventCommandHandler($repository);
+            $commandHandler->handle($command);
+
+            return $this->createInfoResponseForEvent(
+                $cdbid,
+                'KeywordWithdrawn'
+            );
         };
 
         return $this->processEventRequest($callback);
@@ -232,17 +277,14 @@ class EventController
             $rsp = rsp::error('TooManyItems', $e->getMessage());
         } catch (SuspiciousContentException $e) {
             $rsp = rsp::error('SuspectedContent', $e->getMessage());
-        } catch (\CultuurNet\UDB3\UDB2\EventNotFoundException $e) {
-            $status = Response::HTTP_NOT_FOUND;
-            $rsp = rsp::error('NotFound', 'Resource not found');
         } catch (EventNotFoundException $e) {
             $status = Response::HTTP_NOT_FOUND;
             $rsp = rsp::error('NotFound', 'Resource not found');
         } catch (\Exception $e) {
             $rsp = rsp::error('UnexpectedFailure', $e->getMessage());
-        } finally {
-            return $this->createResponse($rsp, $status);
         }
+
+        return $this->createResponse($rsp, $status);
     }
 
     /**

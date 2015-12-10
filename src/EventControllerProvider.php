@@ -8,18 +8,14 @@
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
-use Broadway\Repository\RepositoryInterface;
-use Broadway\UuidGenerator\UuidGeneratorInterface;
 use CultuurNet\Entry\EventPermission;
 use CultuurNet\Entry\EventPermissionCollection;
 use CultuurNet\Entry\Rsp;
-use CultuurNet\UDB3\Event\EventCommandHandler;
 use CultuurNet\UDB3\Event\ReadModel\Permission\PermissionQueryInterface;
 use CultuurNet\UDB3\EventNotFoundException;
-use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\XMLSyntaxException;
-use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
+use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\UpdateEventFromCdbXml;
@@ -33,12 +29,9 @@ use CultuurNet\UDB3SilexEntryAPI\Exceptions\UnexpectedRootElementException;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use ValueObjects\String\String;
 
 class EventControllerProvider implements ControllerProviderInterface
@@ -210,44 +203,54 @@ class EventControllerProvider implements ControllerProviderInterface
             }
         );
 
+        $controllers->delete('/event/{cdbid}/keywords', 'entryapi_event_controller:deleteKeyword');
+
         $controllers->post('/event/{cdbid}/translations', 'entryapi_event_controller:translate');
 
         $controllers->delete('/event/{cdbid}/translations', 'entryapi_event_controller:deleteTranslation');
 
         $controllers->post('/event/{cdbid}/links', 'entryapi_event_controller:addLink');
 
+        $putCallback = function (Request $request, Application $app, $cdbid) {
+            $callback = function () use ($request, $app, $cdbid) {
+                // First try to retrieve the event from the JSON-LD read model.
+                // This will result in a EventNotFoundException if the event
+                // does not exist.
+                /** @var \CultuurNet\UDB3\EventServiceInterface $service */
+                $service = $app['event_service'];
+                $service->getEvent($cdbid);
+
+                if ($request->getContentType() !== 'xml') {
+                    $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
+                    return $this->createResponse($rsp);
+                }
+
+                $xml = new SizeLimitedEventXmlString($request->getContent());
+                $eventId = new String($cdbid);
+
+                $command = new UpdateEventFromCdbXml($eventId, $xml);
+
+                $commandHandler = $app['entry_api.command_handler'];
+
+                $commandHandler->handle($command);
+
+                $link = $app['entryapi.link_base_url'] . $eventId;
+                $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
+                return $rsp;
+            };
+
+            return $this->processEventRequest($callback);
+        };
+
         $controllers->put(
             '/event/{cdbid}',
-            function (Request $request, Application $app, $cdbid) {
-                $callback = function () use ($request, $app, $cdbid) {
-                    // First try to retrieve the event from the JSON-LD read model.
-                    // This will result in a EventNotFoundException if the event
-                    // does not exist.
-                    /** @var \CultuurNet\UDB3\EventServiceInterface $service */
-                    $service = $app['event_service'];
-                    $service->getEvent($cdbid);
+            $putCallback
+        );
 
-                    if ($request->getContentType() !== 'xml') {
-                        $rsp = rsp::error('UnexpectedFailure', 'Content-Type is not XML.');
-                        return $this->createResponse($rsp);
-                    }
-
-                    $xml = new SizeLimitedEventXmlString($request->getContent());
-                    $eventId = new String($cdbid);
-
-                    $command = new UpdateEventFromCdbXml($eventId, $xml);
-
-                    $commandHandler = $app['entry_api.command_handler'];
-
-                    $commandHandler->handle($command);
-
-                    $link = $app['entryapi.link_base_url'] . $eventId;
-                    $rsp = new Rsp('0.1', 'INFO', 'ItemModified', $link, null);
-                    return $rsp;
-                };
-
-                return $this->processEventRequest($callback);
-            }
+        // Culturefeed Entry UI Drupal module seems to use POST instead of PUT.
+        $controllers->post(
+            '/event/{cdbid}',
+            $putCallback
         );
 
         return $controllers;
