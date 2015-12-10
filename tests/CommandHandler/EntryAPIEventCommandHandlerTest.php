@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nicolas
- * Date: 06/10/15
- * Time: 10:49
- */
+
 namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\Testing\CommandHandlerScenarioTestCase;
@@ -16,6 +11,7 @@ use CultuurNet\UDB3\Event\Events\EventCreatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventUpdatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventWasLabelled;
 use CultuurNet\UDB3\Event\Events\LabelsMerged;
+use CultuurNet\UDB3\Event\Events\LinkAdded;
 use CultuurNet\UDB3\Event\Events\TranslationApplied;
 use CultuurNet\UDB3\Event\Events\TranslationDeleted;
 use CultuurNet\UDB3\Event\Events\Unlabelled;
@@ -488,20 +484,30 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
             new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
             new Language('fr'),
             new String('http://cultuurnet.be'),
-            new LinkType('roadmap'),
+            LinkType::COLLABORATION(),
             null,
             null,
             null,
             null
         );
 
-        $this->eventRepository->expects($this->once())
-            ->method('load')
-            ->with('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
-
-        $this->eventRepository->expects($this->once())
-            ->method('save');
-
-        $this->eventFromCdbXmlCommandHandler->handle($addLink);
+        $this->scenario
+            ->withAggregateId($this->id)
+            ->given(
+                [
+                    $this->eventCreated
+                ]
+            )
+            ->when($addLink)
+            ->then(
+                [
+                    new LinkAdded(
+                        new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
+                        new Language('fr'),
+                        new String('http://cultuurnet.be'),
+                        LinkType::COLLABORATION()
+                    )
+                ]
+            );
     }
 }

@@ -23,7 +23,7 @@ class AddLinkTest extends \PHPUnit_Framework_TestCase
         $expectedId = 'someid';
         $expectedLanguage = 'fr';
         $expectedLink = 'http://cultuurnet.be';
-        $expectedLinkType = 'roadmap';
+        $expectedLinkType = 'collaboration';
         $expectedTitle = 'Title';
         $expectedCopyright = 'Jeroom';
         $expectedSubbrand = '2b88e17a-27fc-4310-9556-4df7188a051f';
@@ -33,7 +33,7 @@ class AddLinkTest extends \PHPUnit_Framework_TestCase
             new String('someid'),
             new Language('fr'),
             new String('http://cultuurnet.be'),
-            new LinkType('roadmap'),
+            LinkType::COLLABORATION(),
             new String('Title'),
             new String('Jeroom'),
             new String('2b88e17a-27fc-4310-9556-4df7188a051f'),

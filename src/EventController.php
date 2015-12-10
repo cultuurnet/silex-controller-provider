@@ -237,7 +237,7 @@ class EventController
                 $eventId,
                 new Language($language),
                 new String($link),
-                new LinkType($linktype),
+                LinkType::get($linktype),
                 $title,
                 $copyright,
                 $subbrand,
