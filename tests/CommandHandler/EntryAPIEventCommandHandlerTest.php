@@ -416,6 +416,12 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_deletes_a_translation()
     {
+        $translationApplied = new TranslationApplied(
+            $this->id,
+            new Language('fr'),
+            new String('Vive la monde')
+        );
+
         $deleteTranslation = new DeleteTranslation(
             $this->id,
             new Language('fr')
@@ -425,7 +431,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
             ->withAggregateId($this->id)
             ->given(
                 [
-                    $this->eventCreated
+                    $this->eventCreated,
+                    $translationApplied,
                 ]
             )
             ->when($deleteTranslation)
