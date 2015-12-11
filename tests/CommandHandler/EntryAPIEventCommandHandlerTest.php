@@ -5,8 +5,10 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 use Broadway\CommandHandling\Testing\CommandHandlerScenarioTestCase;
 use Broadway\EventHandling\EventBusInterface;
 use Broadway\EventStore\EventStoreInterface;
+use CultuurNet\UDB3\CollaborationData;
 use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\Event\EventRepository;
+use CultuurNet\UDB3\Event\Events\CollaborationDataAdded;
 use CultuurNet\UDB3\Event\Events\EventCreatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventUpdatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventWasLabelled;
@@ -20,7 +22,7 @@ use CultuurNet\UDB3\LabelCollection;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\LinkType;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
-use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddLink;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddCollaborationLink;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
@@ -480,15 +482,16 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
      */
     public function it_adds_a_link()
     {
-        $addLink = new AddLink(
-            new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
-            new Language('fr'),
-            new String('http://cultuurnet.be'),
-            LinkType::COLLABORATION(),
-            null,
-            null,
-            null,
-            null
+        $eventId = new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+        $language = new Language('fr');
+        $collaborationData = new CollaborationData(
+            new String('2b88e17a-27fc-4310-9556-4df7188a051f')
+        );
+
+        $addLink = new AddCollaborationLink(
+            $eventId,
+            $language,
+            $collaborationData
         );
 
         $this->scenario
@@ -501,11 +504,10 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
             ->when($addLink)
             ->then(
                 [
-                    new LinkAdded(
-                        new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e'),
-                        new Language('fr'),
-                        new String('http://cultuurnet.be'),
-                        LinkType::COLLABORATION()
+                    new CollaborationDataAdded(
+                        $eventId,
+                        $language,
+                        $collaborationData
                     )
                 ]
             );

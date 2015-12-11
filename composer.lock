@@ -606,12 +606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-php.git",
-                "reference": "a5f69929fe70b995e0ff9fd5980c7eb324f237b6"
+                "reference": "241ab2d7c643a811bb62534884a5ff3454c315b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/a5f69929fe70b995e0ff9fd5980c7eb324f237b6",
-                "reference": "a5f69929fe70b995e0ff9fd5980c7eb324f237b6",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/241ab2d7c643a811bb62534884a5ff3454c315b6",
+                "reference": "241ab2d7c643a811bb62534884a5ff3454c315b6",
                 "shasum": ""
             },
             "require": {
@@ -677,7 +677,7 @@
                 }
             ],
             "description": "UDB3 PHP libraries",
-            "time": "2015-12-09 16:38:34"
+            "time": "2015-12-11 16:34:07"
         },
         {
             "name": "danielstjules/stringy",
@@ -3759,12 +3759,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/satooshi/php-coveralls.git",
-                "reference": "c9678fb86bad225ba6cd3e2934d68cb4430a029f"
+                "reference": "afd0861d5e219bf8b3cca8957d9bb1f2004b76c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/c9678fb86bad225ba6cd3e2934d68cb4430a029f",
-                "reference": "c9678fb86bad225ba6cd3e2934d68cb4430a029f",
+                "url": "https://api.github.com/repos/satooshi/php-coveralls/zipball/afd0861d5e219bf8b3cca8957d9bb1f2004b76c2",
+                "reference": "afd0861d5e219bf8b3cca8957d9bb1f2004b76c2",
                 "shasum": ""
             },
             "require": {
@@ -3814,7 +3814,7 @@
                 "github",
                 "test"
             ],
-            "time": "2015-12-10 00:54:47"
+            "time": "2015-12-10 14:16:22"
         },
         {
             "name": "sebastian/comparator",
@@ -4189,22 +4189,25 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.4.0",
+            "version": "2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "32a879f4f35019d78d568db2885d7779ca084a33"
+                "reference": "e4fb41d5d0387d556e2c25534d630b3cce90ea67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/32a879f4f35019d78d568db2885d7779ca084a33",
-                "reference": "32a879f4f35019d78d568db2885d7779ca084a33",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/e4fb41d5d0387d556e2c25534d630b3cce90ea67",
+                "reference": "e4fb41d5d0387d556e2c25534d630b3cce90ea67",
                 "shasum": ""
             },
             "require": {
                 "ext-tokenizer": "*",
                 "ext-xmlwriter": "*",
                 "php": ">=5.1.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
             },
             "bin": [
                 "scripts/phpcs",
@@ -4259,7 +4262,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2015-11-23 21:30:59"
+            "time": "2015-12-11 00:12:46"
         },
         {
             "name": "symfony/config",

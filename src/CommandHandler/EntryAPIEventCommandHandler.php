@@ -13,7 +13,7 @@ use Broadway\Repository\RepositoryInterface;
 use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
-use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddLink;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddCollaborationLink;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
@@ -165,23 +165,18 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
     }
 
     /**
-     * @param AddLink $addLink
+     * @param AddCollaborationLink $addLink
      */
-    public function handleAddLink(AddLink $addLink)
+    public function handleAddCollaborationLink(AddCollaborationLink $addLink)
     {
         /** @var Event $event */
         $event = $this->eventRepository->load(
             $addLink->getEventId()->toNative()
         );
 
-        $event->addLink(
+        $event->addCollaborationData(
             $addLink->getLanguage(),
-            $addLink->getLink(),
-            $addLink->getLinkType(),
-            $addLink->getTitle(),
-            $addLink->getCopyright(),
-            $addLink->getSubbrand(),
-            $addLink->getDescription()
+            $addLink->getCollaborationData()
         );
 
         $this->eventRepository->save($event);
