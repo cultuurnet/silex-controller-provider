@@ -184,6 +184,8 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $request->request->set('lang', 'fr');
         $request->request->set('link', 'http://cultuurnet.be');
         $request->request->set('linktype', 'collaboration');
+        $request->request->set('subbrand', '004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+        $request->request->set('description', '{"foo":"bar"}');
 
         $response = $this->controller->addLink($request, $cdbid);
 
@@ -208,12 +210,17 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $request->request->set('lang', 'fr');
         $request->request->set('link', 'http://cultuurnet.be');
         $request->request->set('linktype', 'roadmap');
+        $request->request->set('subbrand', '004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+        $request->request->set('description', '{"foo":"bar"}');
 
         $response = $this->controller->addLink($request, $cdbid);
 
         $this->assertEquals(400, $response->getStatusCode());
 
-        $rsp = $rsp = rsp::error('UnexpectedFailure', 'Unknown value \'roadmap\'');
+        $rsp = $rsp = rsp::error(
+            'UnexpectedFailure',
+            'Link type should be "collaboration". Any other type is not supported.'
+        );
 
         $this->assertEquals($rsp->toXml(), $response->getContent());
     }
