@@ -198,6 +198,7 @@ class EventController
                 'subbrand' => 'Sub-brand',
                 'description' => 'Description',
                 'linktype' => 'Link type',
+                'plaintext' => 'Plain text',
             ];
 
             foreach ($required as $requiredProperty => $humanReadable) {
@@ -227,7 +228,8 @@ class EventController
             );
 
             $collaborationData = new CollaborationData(
-                new String($request->request->get('subbrand'))
+                new String($request->request->get('subbrand')),
+                new String($request->request->get('plaintext'))
             );
 
             if ($request->request->has('title')) {
