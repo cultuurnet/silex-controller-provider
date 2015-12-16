@@ -9,7 +9,6 @@ use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\EventNotFoundException;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\Language;
-use CultuurNet\UDB3\LinkType;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddCollaborationLink;
