@@ -181,6 +181,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->create('/event/someId/links', 'post', [], [], [], [], []);
         $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('plaintext', 'some plain text');
         $request->request->set('lang', 'fr');
         $request->request->set('link', 'http://cultuurnet.be');
         $request->request->set('linktype', 'collaboration');
@@ -207,6 +208,7 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
         $request = new Request();
         $request->create('/event/someId/links', 'post', [], [], [], [], []);
         $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('plaintext', 'some plain text');
         $request->request->set('lang', 'fr');
         $request->request->set('link', 'http://cultuurnet.be');
         $request->request->set('linktype', 'roadmap');

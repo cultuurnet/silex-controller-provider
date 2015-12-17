@@ -485,7 +485,8 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
         $eventId = new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
         $language = new Language('fr');
         $collaborationData = new CollaborationData(
-            new String('2b88e17a-27fc-4310-9556-4df7188a051f')
+            new String('2b88e17a-27fc-4310-9556-4df7188a051f'),
+            new String('some plain text')
         );
 
         $addLink = new AddCollaborationLink(
