@@ -209,6 +209,8 @@ class EventControllerProvider implements ControllerProviderInterface
 
         $controllers->delete('/event/{cdbid}/translations', 'entryapi_event_controller:deleteTranslation');
 
+        $controllers->post('/event/{cdbid}/links', 'entryapi_event_controller:addLink');
+
         $putCallback = function (Request $request, Application $app, $cdbid) {
             $callback = function () use ($request, $app, $cdbid) {
                 // First try to retrieve the event from the JSON-LD read model.

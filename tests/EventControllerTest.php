@@ -175,6 +175,61 @@ class EventControllerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_respond_to_a_link_addition()
+    {
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+        $request = new Request();
+        $request->create('/event/someId/links', 'post', [], [], [], [], []);
+        $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('plaintext', 'some plain text');
+        $request->request->set('lang', 'fr');
+        $request->request->set('link', 'http://cultuurnet.be');
+        $request->request->set('linktype', 'collaboration');
+        $request->request->set('subbrand', '004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+        $request->request->set('description', '{"foo":"bar"}');
+
+        $response = $this->controller->addLink($request, $cdbid);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $link = $this->entryapiLinkBaseUrl . $cdbid;
+        $rsp = new Rsp('0.1', 'INFO', 'LinkCreated', $link, null);
+
+        $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_error_if_link_type_is_invalid()
+    {
+        $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';
+
+        $request = new Request();
+        $request->create('/event/someId/links', 'post', [], [], [], [], []);
+        $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
+        $request->request->set('plaintext', 'some plain text');
+        $request->request->set('lang', 'fr');
+        $request->request->set('link', 'http://cultuurnet.be');
+        $request->request->set('linktype', 'roadmap');
+        $request->request->set('subbrand', '004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+        $request->request->set('description', '{"foo":"bar"}');
+
+        $response = $this->controller->addLink($request, $cdbid);
+
+        $this->assertEquals(400, $response->getStatusCode());
+
+        $rsp = $rsp = rsp::error(
+            'UnexpectedFailure',
+            'Link type should be "collaboration". Any other type is not supported.'
+        );
+
+        $this->assertEquals($rsp->toXml(), $response->getContent());
+    }
+
+    /**
+     * @test
+     */
     public function it_throws_an_error_if_language_is_not_provided_for_a_translation_deletion()
     {
         $cdbid = '004aea08-e13d-48c9-b9eb-a18f20e6d44e';

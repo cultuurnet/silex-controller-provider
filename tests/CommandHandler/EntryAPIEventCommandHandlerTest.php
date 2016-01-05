@@ -1,28 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nicolas
- * Date: 06/10/15
- * Time: 10:49
- */
+
 namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\Testing\CommandHandlerScenarioTestCase;
 use Broadway\EventHandling\EventBusInterface;
 use Broadway\EventStore\EventStoreInterface;
+use CultuurNet\UDB3\CollaborationData;
 use CultuurNet\UDB3\Event\Commands\Unlabel;
 use CultuurNet\UDB3\Event\EventRepository;
+use CultuurNet\UDB3\Event\Events\CollaborationDataAdded;
 use CultuurNet\UDB3\Event\Events\EventCreatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventUpdatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventWasLabelled;
 use CultuurNet\UDB3\Event\Events\LabelsMerged;
+use CultuurNet\UDB3\Event\Events\LinkAdded;
 use CultuurNet\UDB3\Event\Events\TranslationApplied;
 use CultuurNet\UDB3\Event\Events\TranslationDeleted;
 use CultuurNet\UDB3\Event\Events\Unlabelled;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\LabelCollection;
 use CultuurNet\UDB3\Language;
+use CultuurNet\UDB3\LinkType;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
+use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddCollaborationLink;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\ApplyTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\DeleteTranslation;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\MergeLabels;
@@ -472,6 +472,43 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
                     new Unlabelled(
                         $this->id->toNative(),
                         $label
+                    )
+                ]
+            );
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_a_link()
+    {
+        $eventId = new String('004aea08-e13d-48c9-b9eb-a18f20e6d44e');
+        $language = new Language('fr');
+        $collaborationData = new CollaborationData(
+            new String('2b88e17a-27fc-4310-9556-4df7188a051f'),
+            new String('some plain text')
+        );
+
+        $addLink = new AddCollaborationLink(
+            $eventId,
+            $language,
+            $collaborationData
+        );
+
+        $this->scenario
+            ->withAggregateId($this->id)
+            ->given(
+                [
+                    $this->eventCreated
+                ]
+            )
+            ->when($addLink)
+            ->then(
+                [
+                    new CollaborationDataAdded(
+                        $eventId,
+                        $language,
+                        $collaborationData
                     )
                 ]
             );
