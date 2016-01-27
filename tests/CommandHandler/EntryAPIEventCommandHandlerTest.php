@@ -11,12 +11,12 @@ use CultuurNet\UDB3\Event\EventRepository;
 use CultuurNet\UDB3\Event\Events\CollaborationDataAdded;
 use CultuurNet\UDB3\Event\Events\EventCreatedFromCdbXml;
 use CultuurNet\UDB3\Event\Events\EventUpdatedFromCdbXml;
-use CultuurNet\UDB3\Event\Events\EventWasLabelled;
+use CultuurNet\UDB3\Event\Events\LabelAdded;
 use CultuurNet\UDB3\Event\Events\LabelsMerged;
 use CultuurNet\UDB3\Event\Events\LinkAdded;
 use CultuurNet\UDB3\Event\Events\TranslationApplied;
 use CultuurNet\UDB3\Event\Events\TranslationDeleted;
-use CultuurNet\UDB3\Event\Events\Unlabelled;
+use CultuurNet\UDB3\Event\Events\LabelDeleted;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\LabelCollection;
 use CultuurNet\UDB3\Language;
@@ -460,7 +460,7 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
             ->given(
                 [
                     $this->eventCreated,
-                    new EventWasLabelled(
+                    new LabelAdded(
                         $this->id->toNative(),
                         $label
                     ),
@@ -469,7 +469,7 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
             ->when($unlabel)
             ->then(
                 [
-                    new Unlabelled(
+                    new LabelDeleted(
                         $this->id->toNative(),
                         $label
                     )
