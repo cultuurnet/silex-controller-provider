@@ -658,12 +658,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/udb3-php.git",
-                "reference": "773ab8a1e82736dfa6a1997a70c1566abeacbd27"
+                "reference": "4cee3331d3e932cdb51d62698c1d9c2be5332872"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/773ab8a1e82736dfa6a1997a70c1566abeacbd27",
-                "reference": "773ab8a1e82736dfa6a1997a70c1566abeacbd27",
+                "url": "https://api.github.com/repos/cultuurnet/udb3-php/zipball/4cee3331d3e932cdb51d62698c1d9c2be5332872",
+                "reference": "4cee3331d3e932cdb51d62698c1d9c2be5332872",
                 "shasum": ""
             },
             "require": {
@@ -691,7 +691,7 @@
                 "phpoffice/phpexcel": "~1.8",
                 "psr/log": "~1.0",
                 "rase/socket.io-emitter": "0.6.1",
-                "symfony/http-foundation": "~2.6.9",
+                "symfony/http-foundation": "~2.7.2",
                 "twig/twig": "~1.0"
             },
             "provide": {
@@ -730,7 +730,7 @@
                 }
             ],
             "description": "UDB3 PHP libraries",
-            "time": "2016-01-26 19:16:55"
+            "time": "2016-01-27 15:13:37"
         },
         {
             "name": "danielstjules/stringy",
@@ -2494,38 +2494,39 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v2.6.13",
-            "target-dir": "Symfony/Component/HttpFoundation",
+            "version": "v2.7.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "e8fd1b73ac1c3de1f76c73801ddf1a8ecb1c1c9c"
+                "reference": "2f9d240056f026af5f7ba7f7052b0c6709bf288c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/e8fd1b73ac1c3de1f76c73801ddf1a8ecb1c1c9c",
-                "reference": "e8fd1b73ac1c3de1f76c73801ddf1a8ecb1c1c9c",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/2f9d240056f026af5f7ba7f7052b0c6709bf288c",
+                "reference": "2f9d240056f026af5f7ba7f7052b0c6709bf288c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.3.9"
             },
             "require-dev": {
-                "symfony/expression-language": "~2.4",
-                "symfony/phpunit-bridge": "~2.7"
+                "symfony/expression-language": "~2.4"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.6-dev"
+                    "dev-master": "2.7-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "Symfony\\Component\\HttpFoundation\\": ""
                 },
                 "classmap": [
-                    "Symfony/Component/HttpFoundation/Resources/stubs"
+                    "Resources/stubs"
+                ],
+                "exclude-from-classmap": [
+                    "/Tests/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2544,7 +2545,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-22 10:08:40"
+            "time": "2016-01-13 10:26:43"
         },
         {
             "name": "symfony/http-kernel",
