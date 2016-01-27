@@ -183,9 +183,9 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
     }
 
     /**
-     * @param Unlabel $label
+     * @param DeleteLabel $label
      */
-    protected function handleUnlabel(DeleteLabel $label)
+    protected function handleDeleteLabel(DeleteLabel $label)
     {
         /** @var Event $event */
         $event = $this->eventRepository->load($label->getItemId());
