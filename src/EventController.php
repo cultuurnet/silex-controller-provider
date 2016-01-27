@@ -5,7 +5,7 @@ namespace CultuurNet\UDB3SilexEntryAPI;
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\CollaborationData;
-use CultuurNet\UDB3\Event\Commands\Unlabel;
+use CultuurNet\UDB3\Event\Commands\DeleteLabel;
 use CultuurNet\UDB3\EventNotFoundException;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\Language;
@@ -162,7 +162,7 @@ class EventController
         $label = new Label($request->query->get('keyword'));
 
         $callback = function () use ($cdbid, $label) {
-            $command = new Unlabel($cdbid, $label);
+            $command = new DeleteLabel($cdbid, $label);
 
             $repository = $this->eventRepository;
 

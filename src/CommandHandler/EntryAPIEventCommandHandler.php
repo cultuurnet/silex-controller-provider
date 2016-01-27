@@ -10,7 +10,7 @@ namespace CultuurNet\UDB3SilexEntryAPI\CommandHandler;
 
 use Broadway\CommandHandling\CommandHandler;
 use Broadway\Repository\RepositoryInterface;
-use CultuurNet\UDB3\Event\Commands\Unlabel;
+use CultuurNet\UDB3\Event\Commands\DeleteLabel;
 use CultuurNet\UDB3\Event\Event;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddEventFromCdbXml;
 use CultuurNet\UDB3SilexEntryAPI\Event\Commands\AddCollaborationLink;
@@ -185,7 +185,7 @@ class EntryAPIEventCommandHandler extends CommandHandler implements LoggerAwareI
     /**
      * @param Unlabel $label
      */
-    protected function handleUnlabel(Unlabel $label)
+    protected function handleUnlabel(DeleteLabel $label)
     {
         /** @var Event $event */
         $event = $this->eventRepository->load($label->getItemId());

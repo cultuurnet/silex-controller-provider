@@ -6,7 +6,7 @@ use Broadway\CommandHandling\Testing\CommandHandlerScenarioTestCase;
 use Broadway\EventHandling\EventBusInterface;
 use Broadway\EventStore\EventStoreInterface;
 use CultuurNet\UDB3\CollaborationData;
-use CultuurNet\UDB3\Event\Commands\Unlabel;
+use CultuurNet\UDB3\Event\Commands\DeleteLabel;
 use CultuurNet\UDB3\Event\EventRepository;
 use CultuurNet\UDB3\Event\Events\CollaborationDataAdded;
 use CultuurNet\UDB3\Event\Events\EventCreatedFromCdbXml;
@@ -453,7 +453,7 @@ class EntryAPIEventCommandHandlerTest extends CommandHandlerScenarioTestCase
     {
         $label = new Label('classic rock');
 
-        $unlabel = new Unlabel($this->id, $label);
+        $unlabel = new DeleteLabel($this->id, $label);
 
         $this->scenario
             ->withAggregateId($this->id)
