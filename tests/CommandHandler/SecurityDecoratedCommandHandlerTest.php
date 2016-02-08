@@ -31,7 +31,10 @@ class SecurityDecoratedCommandHandlerTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->security = $this->getMock(SecurityInterface::class);
+        $this->security = $this->getMockBuilder(SecurityInterface::class)
+            ->setMethods(array('allowsUpdateWithCdbXml'))
+            ->getMock();
+
         $this->wrappedCommandHandler = $this->getMock(CommandHandlerInterface::class);
 
         $this->commandHandler = new SecurityDecoratedCommandHandler(
