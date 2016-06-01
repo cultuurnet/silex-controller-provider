@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nicolas
- * Date: 10/11/15
- * Time: 11:49
- */
-
 namespace CultuurNet\UDB3SilexEntryAPI;
 
 use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\Event;
-use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\Event\EventNotFoundException;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\ElementNotFoundException;
 use CultuurNet\UDB3SilexEntryAPI\Exceptions\SchemaValidationException;
