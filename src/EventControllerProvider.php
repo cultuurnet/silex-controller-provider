@@ -256,7 +256,6 @@ class EventControllerProvider implements ControllerProviderInterface
 
         try {
             $rsp = $callback();
-
         } catch (TooLargeException $e) {
             $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
         } catch (XMLSyntaxException $e) {
