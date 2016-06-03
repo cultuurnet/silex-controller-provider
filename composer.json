@@ -6,7 +6,7 @@
     "authors": [],
     "require": {
         "silex/silex": "~1.3",
-        "cultuurnet/cdb": "~2.1",
+        "cultuurnet/cdb": "~2.2.0",
         "cultuurnet/udb3": "~0.1",
         "cultuurnet/entry": "~0.1"
     },

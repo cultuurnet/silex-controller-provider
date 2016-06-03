@@ -73,7 +73,7 @@ class SecurityDecoratedCommandHandlerTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_passes_the_original_update_from_cdbxml_command_to_the_wrapped_command_handler_if_security_allows_so()
+    public function it_should_pass_the_original_update_from_cdbxml_command_to_the_wrapped_command_handler()
     {
         $command = new UpdateEventFromCdbXml(
             new String('foo'),

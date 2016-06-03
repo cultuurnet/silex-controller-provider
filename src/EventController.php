@@ -6,7 +6,7 @@ use Broadway\Repository\RepositoryInterface;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\CollaborationData;
 use CultuurNet\UDB3\Event\Commands\DeleteLabel;
-use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\Event\EventNotFoundException;
 use CultuurNet\UDB3\Label;
 use CultuurNet\UDB3\Language;
 use CultuurNet\UDB3\XMLSyntaxException;
@@ -315,7 +315,6 @@ class EventController
 
         try {
             $rsp = $callback();
-
         } catch (TooLargeException $e) {
             $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
         } catch (XMLSyntaxException $e) {

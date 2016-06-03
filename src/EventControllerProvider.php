@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: jonas
- * Date: 30.09.15
- * Time: 15:43
- */
 
 namespace CultuurNet\UDB3SilexEntryAPI;
 
@@ -12,7 +6,7 @@ use CultuurNet\Entry\EventPermission;
 use CultuurNet\Entry\EventPermissionCollection;
 use CultuurNet\Entry\Rsp;
 use CultuurNet\UDB3\Event\ReadModel\Permission\PermissionQueryInterface;
-use CultuurNet\UDB3\EventNotFoundException;
+use CultuurNet\UDB3\Event\EventNotFoundException;
 use CultuurNet\UDB3\XMLSyntaxException;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\EntryAPIEventCommandHandler;
 use CultuurNet\UDB3SilexEntryAPI\CommandHandler\SecurityDecoratedCommandHandler;
@@ -262,7 +256,6 @@ class EventControllerProvider implements ControllerProviderInterface
 
         try {
             $rsp = $callback();
-
         } catch (TooLargeException $e) {
             $rsp = rsp::error('FileSizeTooLarge', $e->getMessage());
         } catch (XMLSyntaxException $e) {
